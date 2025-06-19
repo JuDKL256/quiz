@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz DWWM Multijoueur</title>
+  <title>Quiz DWWM Interactif</title>
   <style>
     :root { 
       --color-bg-start: #667eea; 
@@ -19,7 +19,6 @@
       min-height: 100vh; 
       padding: 20px; 
       color: white;
-      text-align: center;
     }
     
     .container { 
@@ -30,6 +29,7 @@
       padding: 30px;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      text-align: center;
     }
     
     h1 { 
@@ -38,15 +38,38 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
+    .mode-selector {
+      margin: 30px 0;
+    }
+    
+    .mode-btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 20px 30px;
+      background: linear-gradient(135deg, var(--color-primary), #0984e3);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s;
+      text-decoration: none;
+      min-width: 200px;
+    }
+    
+    .mode-btn:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    
     .game-area {
       background: rgba(255,255,255,0.2);
       border-radius: 15px;
       padding: 25px;
       margin: 20px 0;
       min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      display: none;
     }
     
     .question-card {
@@ -122,34 +145,27 @@
     }
     
     .score-display {
-      font-size: 1.2em;
+      font-size: 1.3em;
       margin: 20px 0;
       padding: 15px;
       background: rgba(255,255,255,0.2);
       border-radius: 10px;
     }
     
-    .player-list {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      margin: 20px 0;
+    .progress-bar {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      height: 8px;
+      margin: 15px 0;
+      overflow: hidden;
     }
     
-    .player-card {
-      background: rgba(255,255,255,0.2);
-      padding: 15px;
+    .progress-fill {
+      background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease;
       border-radius: 10px;
-      margin: 5px;
-      min-width: 120px;
-    }
-    
-    .connection-info {
-      background: rgba(255,255,255,0.15);
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px 0;
-      font-size: 0.9em;
     }
     
     .final-results {
@@ -158,15 +174,6 @@
       border-radius: 15px;
       padding: 30px;
       margin: 20px 0;
-    }
-    
-    .medal {
-      font-size: 2em;
-      margin: 0 10px;
-    }
-    
-    #netplay-canvas {
-      display: none;
     }
     
     .intro-text {
@@ -186,60 +193,90 @@
       margin: 8px 0;
       padding-left: 10px;
     }
+    
+    .timer {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #FFD700;
+      margin: 10px 0;
+    }
+    
+    .connection-info {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 0.9em;
+    }
+    
+    .qr-code {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🎯 Quiz DWWM Multijoueur</h1>
+    <h1>🎯 Quiz DWWM Interactif</h1>
     
-    <div class="intro-text">
-      <strong>🚀 Multijoueur P2P - PC Hôte + Téléphones</strong><br>
-      Connexion directe entre appareils, pas de serveur requis !
+    <!-- Menu principal -->
+    <div id="mainMenu">
+      <div class="intro-text">
+        <strong>🚀 Quiz professionnel pour la formation DWWM</strong><br>
+        Testez vos connaissances en développement web !
+      </div>
+      
+      <div class="feature-list">
+        <ul>
+          <li>✅ <strong>Mode Solo</strong> - Entraînement personnel</li>
+          <li>🎮 <strong>Mode Multijoueur</strong> - PC hôte + mobiles joueurs</li>
+          <li>⚡ <strong>Questions mélangées</strong> - Jamais le même quiz</li>
+          <li>🏆 <strong>Scores et classements</strong> - Compétition amicale</li>
+          <li>📱 <strong>Mobile-friendly</strong> - Fonctionne partout</li>
+        </ul>
+      </div>
+      
+      <div class="mode-selector">
+        <button class="mode-btn" onclick="startSoloMode()">
+          ⚡ Mode Solo<br>
+          <small>Test rapide individuel</small>
+        </button>
+        
+        <button class="mode-btn" onclick="startHostMode()">
+          🖥️ Mode Hôte<br>
+          <small>Créer une partie multijoueur</small>
+        </button>
+        
+        <button class="mode-btn" onclick="startPlayerMode()">
+          📱 Rejoindre<br>
+          <small>Participer à une partie</small>
+        </button>
+      </div>
     </div>
-    
-    <div class="feature-list">
-      <ul>
-        <li>✅ <strong>Juste une page HTML</strong> - Aucune configuration</li>
-        <li>🖥️ <strong>PC hôte</strong> - Contrôle le quiz</li>
-        <li>📱 <strong>Mobiles joueurs</strong> - Rejoignent facilement</li>
-        <li>⚡ <strong>Temps réel</strong> - Synchronisation automatique</li>
-        <li>🌐 <strong>Marche partout</strong> - Pas de problème réseau</li>
-      </ul>
-    </div>
-    
-    <!-- NetplayJS Canvas (caché) -->
-    <canvas id="netplay-canvas" width="1" height="1"></canvas>
     
     <!-- Zone de jeu -->
     <div class="game-area" id="gameArea">
-      <h2>🎮 Démarrage du Quiz</h2>
-      <p>Initialisation de la connexion P2P...</p>
-      <div class="connection-info" id="connectionInfo">
-        <div>📡 Connexion NetplayJS en cours...</div>
+      <div class="score-display" id="scoreDisplay"></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
       </div>
+      <div class="timer" id="timer"></div>
+      <div id="questionContainer"></div>
     </div>
     
-    <!-- Affichage des joueurs -->
-    <div class="player-list" id="playerList" style="display:none;">
-      <div class="player-card">
-        <div>👑 Hôte</div>
-        <div id="hostScore">0 pts</div>
-      </div>
-    </div>
-    
-    <!-- Affichage du score -->
-    <div class="score-display" id="scoreDisplay" style="display:none;">
-      Question 1/5 - Score: 0
+    <!-- Section multijoueur -->
+    <div class="connection-info" id="connectionInfo" style="display:none;">
+      <div id="roomCode"></div>
+      <div class="qr-code" id="qrCode" style="display:none;"></div>
+      <div id="playersList"></div>
     </div>
   </div>
 
-  <!-- NetplayJS from CDN -->
-  <script src="https://unpkg.com/netplayjs@0.4.1/dist/netplay.js" 
-          integrity="sha384-6Yb8LWAT488jwK+nIjvD4S5/poq1Xn69NYjH1RXKHoaUOaFJrKQ1rfGQgKm8oQjX" 
-          crossorigin="anonymous"></script>
-
   <script>
-    // Questions DWWM
+    // Questions DWWM - Ajoutez vos vraies questions ici
     const questionsBySubject = [
       {
         title: "Quel langage est principalement utilisé pour le développement web côté client ?",
@@ -265,222 +302,192 @@
         title: "Quel protocole est utilisé pour les communications web sécurisées ?",
         choices: ["HTTP", "HTTPS", "FTP", "SSH"],
         answer: [1]
+      },
+      {
+        title: "Que signifie HTML ?",
+        choices: ["Hypertext Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hypertext Machine Language"],
+        answer: [0]
+      },
+      {
+        title: "Quels sont les types de données primitifs en JavaScript ?",
+        choices: ["string", "number", "boolean", "object"],
+        answer: [0, 1, 2]
+      },
+      {
+        title: "Quel est le rôle principal d'un développeur web ?",
+        choices: ["Créer des sites web", "Réparer des ordinateurs", "Installer des logiciels", "Gérer des réseaux"],
+        answer: [0]
+      },
+      {
+        title: "Quels outils sont essentiels pour un développeur web ?",
+        choices: ["Éditeur de code", "Navigateur", "Serveur local", "Calculatrice"],
+        answer: [0, 1, 2]
+      },
+      {
+        title: "Que permet de faire PHP ?",
+        choices: ["Développement côté serveur", "Stylisation des pages", "Animation des éléments", "Gestion de base de données"],
+        answer: [0, 3]
       }
     ];
 
-    // Classe Quiz NetplayJS
-    class QuizGame extends netplayjs.Game {
-      static timestep = 1000 / 2; // 2 FPS (suffisant pour un quiz)
-      static canvasSize = { width: 1, height: 1 }; // Canvas minimal
+    // Variables globales
+    let currentMode = '';
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let questions = [];
+    let selectedChoices = [];
+    let hasAnswered = false;
+    let timeLeft = 30;
+    let timer = null;
+    
+    // Éléments DOM
+    const mainMenu = document.getElementById('mainMenu');
+    const gameArea = document.getElementById('gameArea');
+    const questionContainer = document.getElementById('questionContainer');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const progressFill = document.getElementById('progressFill');
+    const timerDisplay = document.getElementById('timer');
+    const connectionInfo = document.getElementById('connectionInfo');
+
+    // Mode Solo
+    function startSoloMode() {
+      currentMode = 'solo';
+      mainMenu.style.display = 'none';
+      gameArea.style.display = 'block';
       
-      static playerInputBuilder = () => {
-        return {};
-      };
-
-      constructor(canvas) {
-        super(canvas);
-        
-        // État du jeu
-        this.gameState = 'lobby'; // lobby, playing, finished
-        this.currentQuestionIndex = 0;
-        this.questions = this.shuffleArray([...questionsBySubject]);
-        this.playerAnswers = new Map();
-        this.playerScores = new Map();
-        this.timeLeft = 30;
-        this.questionStartTime = 0;
-        
-        // UI Elements
-        this.gameArea = document.getElementById('gameArea');
-        this.playerList = document.getElementById('playerList');
-        this.scoreDisplay = document.getElementById('scoreDisplay');
-        this.connectionInfo = document.getElementById('connectionInfo');
-        
-        // Initialize UI
-        this.updateUI();
-      }
-
-      // Initialiser l'état du jeu
-      initialize() {
-        return {
-          gameState: 'lobby',
-          currentQuestionIndex: 0,
-          questions: this.shuffleArray([...questionsBySubject]),
-          playerAnswers: {},
-          playerScores: {},
-          timeLeft: 30,
-          questionStartTime: 0,
-          playerCount: 0
-        };
-      }
-
-      // Mise à jour du jeu
-      update(state, inputs) {
-        // Simple auto-start
-        if (state.gameState === 'lobby') {
-          state.gameState = 'playing';
-          state.questionStartTime = Date.now();
-          return state;
-        }
-        
-        // Gestion du timer
-        if (state.gameState === 'playing') {
-          const elapsed = (Date.now() - state.questionStartTime) / 1000;
-          state.timeLeft = Math.max(0, 30 - elapsed);
-          
-          // Question suivante automatiquement après 30s
-          if (state.timeLeft <= 0) {
-            this.nextQuestion(state);
-          }
-        }
-        
-        return state;
-      }
-
-      // Prochaine question
-      nextQuestion(state) {
-        state.currentQuestionIndex++;
-        
-        if (state.currentQuestionIndex >= state.questions.length) {
-          state.gameState = 'finished';
-          this.showFinalResults(state);
-        } else {
-          state.questionStartTime = Date.now();
-          state.timeLeft = 30;
-          state.playerAnswers = {};
-          this.showQuestion(state);
-        }
-      }
-
-      // Affichage de la question
-      showQuestion(state) {
-        const question = state.questions[state.currentQuestionIndex];
-        if (!question) return;
-
-        // Simple approach - show question for everyone
-        let html = `
-          <div class="question-card">
-            <div class="question-title">
-              Question ${state.currentQuestionIndex + 1}/${state.questions.length}: ${question.title}
-            </div>
-        `;
-        
-        // Show choices for interaction
-        question.choices.forEach((choice, i) => {
-          html += `
-            <div class="choice" onclick="selectChoice(${i})" data-choice="${i}">
-              ${choice}
-            </div>
-          `;
-        });
-        
-        html += '<button onclick="submitAnswer()" id="submitBtn">📝 Valider ma réponse</button>';
-        html += '</div>';
-        
-        this.gameArea.innerHTML = html;
-        
-        // Show score
-        this.scoreDisplay.style.display = 'block';
-        this.scoreDisplay.textContent = `Question ${state.currentQuestionIndex + 1}/${state.questions.length} - ⏱️ ${Math.ceil(state.timeLeft)}s`;
-      }
-
-      // Résultats finaux
-      showFinalResults(state) {
-        // Simplified results - just show user's score
-        const userScore = this.playerScores.get('user') || 0;
-        const percentage = Math.round((userScore / this.questions.length) * 100);
-
-        let html = `<div class="final-results">
-          <h2>🏆 Quiz Terminé !</h2>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.3); border-radius: 10px;">
-            <span>🎯 Votre score</span>
-            <span style="font-weight: bold; font-size: 1.2em;">${userScore}/${this.questions.length} (${percentage}%)</span>
-          </div>
-          <button onclick="restartGame()">🔄 Nouveau Quiz</button>
-        </div>`;
-        
-        this.gameArea.innerHTML = html;
-      }
-
-      // Mise à jour de l'UI
-      updateUI() {
-        // Simpler approach - check if we have multiple clients
-        const isHost = true; // For now, assume first instance is host
-        
-        this.connectionInfo.innerHTML = `
-          <div>🎮 <strong>Connexion P2P établie</strong></div>
-          <div>🚀 Prêt à jouer !</div>
-          <div>💡 Ouvrez cette page sur un autre appareil pour jouer à plusieurs</div>
-        `;
-        
-        // Start the game automatically after connection
-        setTimeout(() => {
-          if (this.gameState === 'lobby') {
-            this.gameState = 'playing';
-            this.showQuestion(this.getState());
-          }
-        }, 2000);
-      }
-
-      // Rendu (minimal pour NetplayJS)
-      draw(state) {
-        // Simple rendering approach
-        if (state.gameState === 'playing' && state.currentQuestionIndex < state.questions.length) {
-          this.showQuestion(state);
-        }
-      }
-
-      // Sérialisation de l'état
-      serialize(state) {
-        return JSON.stringify(state);
-      }
-
-      // Désérialisation de l'état
-      deserialize(data) {
-        return JSON.parse(data);
-      }
-
-      // Utilitaire pour mélanger un tableau
-      shuffleArray(array) {
-        const arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      }
-
-      // Access to game state for external functions
-      getState() {
-        return this.gameState ? {
-          gameState: this.gameState,
-          currentQuestionIndex: this.currentQuestionIndex,
-          questions: this.questions,
-          playerAnswers: this.playerAnswers,
-          playerScores: this.playerScores,
-          timeLeft: this.timeLeft,
-          questionStartTime: this.questionStartTime
-        } : this.initialize();
-      }
-
-      // External access to nextQuestion
-      nextQuestionExternal() {
-        const state = this.getState();
-        this.nextQuestion(state);
-        // Update internal state
-        this.gameState = state.gameState;
-        this.currentQuestionIndex = state.currentQuestionIndex;
-        this.playerScores = state.playerScores;
-      }
+      // Initialiser le quiz
+      questions = shuffleArray([...questionsBySubject]).slice(0, 5);
+      currentQuestionIndex = 0;
+      score = 0;
+      
+      showQuestion();
     }
 
-    // Variables globales pour l'interaction
-    let selectedChoices = [];
-    let game;
+    // Mode Hôte
+    function startHostMode() {
+      currentMode = 'host';
+      mainMenu.style.display = 'none';
+      gameArea.style.display = 'block';
+      connectionInfo.style.display = 'block';
+      
+      // Générer code de partie
+      const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      
+      document.getElementById('roomCode').innerHTML = `
+        <h3>🏠 Vous êtes l'hôte</h3>
+        <div style="font-size: 1.5em; margin: 15px 0; color: #FFD700;">
+          Code de partie: <strong>${roomCode}</strong>
+        </div>
+        <p>Partagez ce code avec les joueurs !</p>
+      `;
+      
+      // Générer QR Code simple (texte)
+      const url = `${window.location.origin}${window.location.pathname}?join=${roomCode}`;
+      document.getElementById('qrCode').innerHTML = `
+        <div style="color: #333; padding: 10px;">
+          <strong>URL à partager :</strong><br>
+          <small>${url}</small><br>
+          <em>(Scannez ce texte ou partagez l'URL)</em>
+        </div>
+      `;
+      document.getElementById('qrCode').style.display = 'block';
+      
+      // Initialiser le quiz
+      questions = shuffleArray([...questionsBySubject]).slice(0, 5);
+      currentQuestionIndex = 0;
+      score = 0;
+      
+      // Démarrer automatiquement après 5 secondes
+      let countdown = 5;
+      const countdownInterval = setInterval(() => {
+        questionContainer.innerHTML = `
+          <div style="text-align: center; font-size: 1.5em;">
+            🚀 Le quiz démarre dans ${countdown} secondes...<br>
+            <small>Les joueurs peuvent encore rejoindre !</small>
+          </div>
+        `;
+        countdown--;
+        
+        if (countdown < 0) {
+          clearInterval(countdownInterval);
+          showQuestion();
+        }
+      }, 1000);
+    }
 
-    // Sélection d'une réponse
+    // Mode Joueur
+    function startPlayerMode() {
+      const roomCode = prompt('Entrez le code de la partie :');
+      if (!roomCode) return;
+      
+      currentMode = 'player';
+      mainMenu.style.display = 'none';
+      gameArea.style.display = 'block';
+      connectionInfo.style.display = 'block';
+      
+      document.getElementById('roomCode').innerHTML = `
+        <h3>📱 Joueur connecté</h3>
+        <div>Partie: <strong>${roomCode}</strong></div>
+        <p>En attente du début du quiz...</p>
+      `;
+      
+      // Simuler connexion et démarrage
+      setTimeout(() => {
+        questions = shuffleArray([...questionsBySubject]).slice(0, 5);
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion();
+      }, 3000);
+    }
+
+    // Afficher une question
+    function showQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        showFinalResults();
+        return;
+      }
+      
+      const question = questions[currentQuestionIndex];
+      hasAnswered = false;
+      selectedChoices = [];
+      
+      // Démarrer le timer
+      timeLeft = 30;
+      startTimer();
+      
+      // Afficher la question
+      let html = `
+        <div class="question-card">
+          <div class="question-title">
+            Question ${currentQuestionIndex + 1}/${questions.length}: ${question.title}
+          </div>
+          <div class="choices">
+      `;
+      
+      question.choices.forEach((choice, i) => {
+        html += `
+          <div class="choice" onclick="selectChoice(${i})" data-choice="${i}">
+            ${choice}
+          </div>
+        `;
+      });
+      
+      html += `
+          </div>
+          <button onclick="submitAnswer()" id="submitBtn">📝 Valider ma réponse</button>
+        </div>
+      `;
+      
+      questionContainer.innerHTML = html;
+      updateScore();
+      updateProgress();
+    }
+
+    // Sélectionner une réponse
     function selectChoice(choiceIndex) {
-      const choices = document.querySelectorAll('.choice');
-      const choice = choices[choiceIndex];
+      if (hasAnswered) return;
+      
+      const choice = document.querySelector(`[data-choice="${choiceIndex}"]`);
       
       if (choice.classList.contains('selected')) {
         choice.classList.remove('selected');
@@ -493,169 +500,146 @@
 
     // Soumettre la réponse
     function submitAnswer() {
-      if (selectedChoices.length === 0) {
-        alert('Veuillez sélectionner au moins une réponse !');
+      if (hasAnswered || selectedChoices.length === 0) {
+        if (selectedChoices.length === 0) {
+          alert('Veuillez sélectionner au moins une réponse !');
+        }
         return;
       }
       
-      // Désactiver les choix
-      document.querySelectorAll('.choice').forEach(choice => {
-        choice.style.pointerEvents = 'none';
-      });
+      hasAnswered = true;
+      const currentQuestion = questions[currentQuestionIndex];
       
-      document.getElementById('submitBtn').disabled = true;
-      document.getElementById('submitBtn').textContent = '✅ Répondu !';
+      // Arrêter le timer
+      clearInterval(timer);
       
-      // Get current question
-      const currentQuestion = game.questions[game.currentQuestionIndex];
+      // Vérifier la réponse
+      const isCorrect = JSON.stringify(selectedChoices.sort()) === JSON.stringify(currentQuestion.answer.sort());
+      if (isCorrect) score++;
       
+      // Afficher le feedback
       document.querySelectorAll('.choice').forEach((choice, i) => {
-        const isCorrect = currentQuestion.answer.includes(i);
+        const isCorrectAnswer = currentQuestion.answer.includes(i);
         const isSelected = selectedChoices.includes(i);
         
-        if (isCorrect) {
+        choice.style.pointerEvents = 'none';
+        
+        if (isCorrectAnswer) {
           choice.classList.add('correct');
         } else if (isSelected) {
           choice.classList.add('incorrect');
         }
       });
       
-      // Calculer le score
-      const isCorrect = JSON.stringify(selectedChoices.sort()) === JSON.stringify(currentQuestion.answer.sort());
+      // Désactiver le bouton
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('submitBtn').textContent = isCorrect ? '✅ Correct !' : '❌ Incorrect';
       
-      // Update user score
-      if (isCorrect) {
-        if (!game.playerScores.has('user')) {
-          game.playerScores.set('user', 0);
-        }
-        game.playerScores.set('user', game.playerScores.get('user') + 1);
-      }
-      
-      // Reset pour la prochaine question
-      selectedChoices = [];
-      
-      // Auto next question after 3 seconds
+      // Question suivante après 3 secondes
       setTimeout(() => {
-        game.nextQuestionExternal();
+        currentQuestionIndex++;
+        showQuestion();
       }, 3000);
     }
 
-    // Redémarrer le jeu
-    function restartGame() {
-      if (game) {
-        // Reset game state
-        game.gameState = 'lobby';
-        game.currentQuestionIndex = 0;
-        game.questions = game.shuffleArray([...questionsBySubject]);
-        game.playerScores.clear();
-        game.timeLeft = 30;
+    // Timer
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `⏱️ ${timeLeft}s`;
         
-        // Restart UI
-        game.updateUI();
-        
-        // Auto-start after a moment
-        setTimeout(() => {
-          game.gameState = 'playing';
-          game.questionStartTime = Date.now();
-          game.showQuestion({ 
-            questions: game.questions, 
-            currentQuestionIndex: game.currentQuestionIndex,
-            timeLeft: game.timeLeft 
-          });
-        }, 1000);
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          if (!hasAnswered) {
+            submitAnswer(); // Auto-submit
+          }
+        }
+      }, 1000);
+    }
+
+    // Mise à jour du score
+    function updateScore() {
+      scoreDisplay.textContent = `Score: ${score}/${currentQuestionIndex} | Question ${currentQuestionIndex + 1}/${questions.length}`;
+    }
+
+    // Mise à jour de la progression
+    function updateProgress() {
+      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFill.style.width = progress + '%';
+    }
+
+    // Résultats finaux
+    function showFinalResults() {
+      clearInterval(timer);
+      const percentage = Math.round((score / questions.length) * 100);
+      
+      let performance = '';
+      if (percentage >= 80) performance = '🏆 Excellent !';
+      else if (percentage >= 60) performance = '👏 Bien joué !';
+      else if (percentage >= 40) performance = '📚 À retravailler';
+      else performance = '💪 Continuez vos efforts !';
+      
+      questionContainer.innerHTML = `
+        <div class="final-results">
+          <h2>🎯 Quiz terminé !</h2>
+          <div style="font-size: 2em; margin: 20px 0;">
+            ${score}/${questions.length}
+          </div>
+          <div style="font-size: 1.5em; margin: 15px 0;">
+            ${percentage}% de réussite
+          </div>
+          <div style="font-size: 1.3em; margin: 15px 0;">
+            ${performance}
+          </div>
+          <button onclick="restart()" style="font-size: 1.2em; padding: 15px 30px;">
+            🔄 Refaire un quiz
+          </button>
+          <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
+            🏠 Menu principal
+          </button>
+        </div>
+      `;
+      
+      timerDisplay.textContent = '';
+    }
+
+    // Redémarrer
+    function restart() {
+      if (currentMode === 'solo') {
+        startSoloMode();
+      } else if (currentMode === 'host') {
+        startHostMode();
+      } else {
+        startPlayerMode();
       }
     }
 
-    // Démarrage du jeu NetplayJS
+    // Retour au menu
+    function goHome() {
+      gameArea.style.display = 'none';
+      connectionInfo.style.display = 'none';
+      mainMenu.style.display = 'block';
+      clearInterval(timer);
+    }
+
+    // Mélanger un tableau
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Auto-join via URL
     window.addEventListener('load', () => {
-      const canvas = document.getElementById('netplay-canvas');
-      
-      try {
-        game = new QuizGame(canvas);
-        
-        // Simple start without NetplayJS complexity for now
-        console.log('✅ Quiz démarré en mode simplifié !');
-        
-        // Auto-start the game
-        setTimeout(() => {
-          game.gameState = 'playing';
-          game.questionStartTime = Date.now();
-          game.showQuestion({ 
-            questions: game.questions, 
-            currentQuestionIndex: game.currentQuestionIndex,
-            timeLeft: game.timeLeft 
-          });
-        }, 2000);
-        
-      } catch (error) {
-        console.error('❌ Erreur:', error);
-        document.getElementById('gameArea').innerHTML = `
-          <div style="color: #ff6b6b; text-align: center;">
-            <h3>🎯 Mode Quiz Solo</h3>
-            <p>Le multijoueur P2P n'est pas disponible, mais vous pouvez jouer !</p>
-            <button onclick="startSimpleQuiz()">🚀 Commencer le Quiz</button>
-          </div>
-        `;
+      const urlParams = new URLSearchParams(window.location.search);
+      const joinCode = urlParams.get('join');
+      if (joinCode) {
+        setTimeout(() => startPlayerMode(), 500);
       }
     });
-
-    // Fallback simple quiz
-    function startSimpleQuiz() {
-      // Simple quiz fallback without NetplayJS
-      let currentQuestionIndex = 0;
-      let score = 0;
-      const questions = questionsBySubject.slice(0, 5);
-      
-      function showSimpleQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-          const percentage = Math.round((score / questions.length) * 100);
-          document.getElementById('gameArea').innerHTML = `
-            <div class="final-results">
-              <h2>🏆 Quiz Terminé !</h2>
-              <p>Score: <strong>${score}/${questions.length}</strong> (${percentage}%)</p>
-              <button onclick="location.reload()">🔄 Recommencer</button>
-            </div>
-          `;
-          return;
-        }
-        
-        const question = questions[currentQuestionIndex];
-        let html = `
-          <div class="question-card">
-            <div class="question-title">Question ${currentQuestionIndex + 1}: ${question.title}</div>
-        `;
-        
-        question.choices.forEach((choice, i) => {
-          html += `<div class="choice" onclick="selectChoice(${i})" data-choice="${i}">${choice}</div>`;
-        });
-        
-        html += '<button onclick="submitSimpleAnswer()">📝 Valider</button></div>';
-        document.getElementById('gameArea').innerHTML = html;
-      }
-      
-      window.submitSimpleAnswer = function() {
-        const selected = selectedChoices;
-        const correct = JSON.stringify(selected.sort()) === JSON.stringify(questions[currentQuestionIndex].answer.sort());
-        
-        if (correct) score++;
-        
-        // Show feedback
-        document.querySelectorAll('.choice').forEach((choice, i) => {
-          const isCorrect = questions[currentQuestionIndex].answer.includes(i);
-          const isSelected = selected.includes(i);
-          
-          if (isCorrect) choice.classList.add('correct');
-          else if (isSelected) choice.classList.add('incorrect');
-        });
-        
-        selectedChoices = [];
-        currentQuestionIndex++;
-        
-        setTimeout(showSimpleQuestion, 2000);
-      };
-      
-      showSimpleQuestion();
-    }
   </script>
 </body>
 </html>
