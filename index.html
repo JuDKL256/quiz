@@ -278,6 +278,395 @@
       color: #333;
     }
     
+    /* Styles spécifiques multijoueur */
+    .answer-status {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
+    
+    .player-answer-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 10px 0;
+    }
+    
+    .player-status-chip {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 15px;
+      color: white;
+      font-size: 0.9em;
+      margin: 2px;
+    }
+    
+    .player-status-chip.answered {
+      background: #28a745;
+    }
+    
+    .player-status-chip.waiting {
+      background: #6c757d;
+    }
+    
+    .choice-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .choice-stats .percentage {
+      background: rgba(0,0,0,0.1);
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.9em;
+    }
+    
+    .stats-card {
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 5px;
+    }
+    
+    .stats-card.correct {
+      background: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+    
+    .stats-card.incorrect {
+      background: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+    }
+    
+    .stats-card.percentage {
+      background: rgba(23, 162, 184, 0.2);
+      color: #17a2b8;
+    }
+    
+    /* Styles pour la configuration de quiz */
+    .quiz-config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .type-checkbox {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .type-checkbox:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: var(--color-primary);
+    }
+    
+    .type-checkbox input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    
+    .type-checkbox input[type="checkbox"]:checked + .type-label {
+      color: var(--color-primary);
+      font-weight: bold;
+    }
+    
+    .type-checkbox.special {
+      background: rgba(255,215,0,0.1);
+      border-color: rgba(255,215,0,0.3);
+    }
+    
+    .type-label {
+      flex: 1;
+      font-weight: 500;
+    }
+    
+    .type-count {
+      opacity: 0.7;
+      font-size: 0.85em;
+    }
+    
+    .format-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .format-option {
+      display: flex;
+      align-items: flex-start;
+      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .format-option:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: var(--color-primary);
+    }
+    
+    .format-option input[type="radio"] {
+      margin-right: 15px;
+      margin-top: 3px;
+      transform: scale(1.2);
+    }
+    
+    .format-option input[type="radio"]:checked ~ .format-content {
+      color: var(--color-primary);
+    }
+    
+    .format-content strong {
+      display: block;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+    
+    .format-content p {
+      font-size: 0.9em;
+      opacity: 0.8;
+      margin: 0;
+    }
+    
+    .series-selector {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+      justify-content: center;
+    }
+    
+    .series-btn {
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border-radius: 50%;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .series-btn:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: var(--color-primary);
+    }
+    
+    .series-btn.selected {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      transform: scale(1.1);
+    }
+    
+    .config-summary {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--color-primary);
+    }
+    
+    .final-config {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    .config-item {
+      margin: 10px 0;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .config-item:last-child {
+      border-bottom: none;
+    }
+    
+    .series-results {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin: 20px 0;
+    }
+    
+    .series-podium {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .podium-item {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .podium-item.first {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #333;
+    }
+    
+    .podium-item.second {
+      background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
+      color: #333;
+    }
+    
+    .podium-item.third {
+      background: linear-gradient(135deg, #CD7F32, #B87333);
+      color: white;
+    }
+    
+    /* Styles pour les résultats finaux */
+    .results-tabs {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 5px;
+    }
+    
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      margin: 0 5px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1em;
+    }
+    
+    .tab-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .tab-btn.active {
+      background: var(--color-primary);
+      color: white;
+      transform: none;
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .question-summary {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .question-summary:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(5px);
+    }
+    
+    .question-summary-header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      gap: 15px;
+    }
+    
+    .question-number {
+      background: var(--color-primary);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    .question-type-small {
+      background: rgba(255,255,255,0.2);
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.85em;
+      white-space: nowrap;
+    }
+    
+    .question-title-small {
+      flex: 1;
+      font-weight: 500;
+    }
+    
+    .expand-icon {
+      font-size: 1.2em;
+      transition: transform 0.3s ease;
+    }
+    
+    .question-details {
+      padding: 0 15px 15px 15px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .question-choices-review {
+      margin: 15px 0;
+    }
+    
+    .choice-review {
+      padding: 10px;
+      margin: 8px 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+    }
+    
+    .choice-review.correct {
+      background: rgba(40, 167, 69, 0.2);
+      border-left-color: #28a745;
+      color: #28a745;
+      font-weight: 500;
+    }
+    
+    .explanation-review {
+      background: rgba(255, 243, 205, 0.9);
+      color: #856404;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
+    
+    .explanation-review h4 {
+      color: #856404;
+      margin-bottom: 10px;
+    }
+    
+    .question-stats {
+      margin: 15px 0;
+    }
+    
     /* Styles multijoueur */
     .connection-info {
       background: rgba(255,255,255,0.15);
@@ -430,7 +819,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // ⚠️ CONFIGURATION FIREBASE - VOS VRAIES VALEURS
     const firebaseConfig = {
       apiKey: "AIzaSyCOegG19Z-G04jRXBA3aXUSLTrHrPtEwbQ",
       authDomain: "quiz-4321f.firebaseapp.com",
@@ -3748,43 +4136,226 @@
     // Sélection du type de quiz par l'hôte
     function selectQuizType() {
       const types = Object.keys(questionsBySubject);
-      const typesList = types.map(type => `<button onclick="setQuizType('${type}')" class="type-btn">${type}</button>`).join('');
       
       questionContainer.innerHTML = `
         <div class="question-card">
-          <h3>Choisissez le type de quiz :</h3>
-          <div style="margin: 20px 0;">
-            ${typesList}
-            <button onclick="setQuizType('mixed')" class="type-btn" style="background: #17a2b8;">🎯 Quiz mixte (toutes catégories)</button>
+          <h3>🎮 Configuration du Quiz Multijoueur</h3>
+          
+          <div style="margin: 25px 0;">
+            <h4>📚 Domaines à inclure :</h4>
+            <p style="font-size: 0.9em; opacity: 0.8; margin-bottom: 15px;">Sélectionnez un ou plusieurs domaines</p>
+            <div class="quiz-config-grid">
+              ${types.map(type => `
+                <label class="type-checkbox">
+                  <input type="checkbox" value="${type}" onchange="updateTypeSelection()">
+                  <span class="type-label">${type}</span>
+                  <small class="type-count">(${questionsBySubject[type].length} questions)</small>
+                </label>
+              `).join('')}
+              <label class="type-checkbox special">
+                <input type="checkbox" value="all" onchange="selectAllTypes()">
+                <span class="type-label">🎯 Tous les domaines</span>
+                <small class="type-count">(${Object.values(questionsBySubject).flat().length} questions)</small>
+              </label>
+            </div>
+          </div>
+          
+          <div style="margin: 25px 0;">
+            <h4>🏆 Format du quiz :</h4>
+            <div class="format-options">
+              <label class="format-option">
+                <input type="radio" name="format" value="series" checked onchange="updateFormatSelection()">
+                <div class="format-content">
+                  <strong>Mode Séries</strong>
+                  <p>Séries de 5 questions avec classements intermédiaires</p>
+                </div>
+              </label>
+              <label class="format-option">
+                <input type="radio" name="format" value="marathon" onchange="updateFormatSelection()">
+                <div class="format-content">
+                  <strong>Mode Marathon</strong>
+                  <p>Toutes les questions d'affilée</p>
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <div id="seriesConfig" style="margin: 25px 0;">
+            <h4>🎯 Nombre de séries :</h4>
+            <div class="series-selector">
+              ${[1,2,3,4,5,6].map(num => `
+                <button class="series-btn ${num === 3 ? 'selected' : ''}" onclick="selectSeriesCount(${num})">${num}</button>
+              `).join('')}
+            </div>
+            <p style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
+              Chaque série = 5 questions • Total = <span id="totalQuestions">15</span> questions
+            </p>
+          </div>
+          
+          <div style="margin: 25px 0;">
+            <div id="configSummary" class="config-summary">
+              <h4>📋 Résumé de la configuration :</h4>
+              <div id="summaryContent">Sélectionnez au moins un domaine pour commencer</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <button onclick="generateQuiz()" id="generateQuizBtn" style="display: none; font-size: 1.2em; padding: 15px 30px; background: #28a745;">
+              🎯 Générer le Quiz
+            </button>
           </div>
         </div>
       `;
+      
+      // Variables pour la configuration
+      window.selectedTypes = [];
+      window.seriesCount = 3;
+      window.quizFormat = 'series';
     }
 
-    // Définir le type de quiz
-    function setQuizType(type) {
-      selectedType = type;
+    // Mettre à jour la sélection des types
+    function updateTypeSelection() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([value="all"])');
+      const allCheckbox = document.querySelector('input[value="all"]');
       
-      let selectedQuestions = [];
-      if (type === 'mixed') {
-        const allQuestions = Object.values(questionsBySubject).flat();
-        selectedQuestions = shuffleArray([...allQuestions]).slice(0, 10);
-      } else {
-        selectedQuestions = shuffleArray([...questionsBySubject[type]]).slice(0, 8);
+      window.selectedTypes = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+      
+      // Décocher "Tous" si on sélectionne individuellement
+      if (window.selectedTypes.length > 0) {
+        allCheckbox.checked = false;
       }
       
-      // Sauvegarder les questions dans Firebase
-      database.ref('rooms/' + roomId + '/questions').set(selectedQuestions);
-      database.ref('rooms/' + roomId + '/selectedType').set(type);
+      updateConfigSummary();
+    }
+
+    // Sélectionner tous les types
+    function selectAllTypes() {
+      const allCheckbox = document.querySelector('input[value="all"]');
+      const otherCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([value="all"])');
+      
+      if (allCheckbox.checked) {
+        window.selectedTypes = Object.keys(questionsBySubject);
+        otherCheckboxes.forEach(cb => cb.checked = true);
+      } else {
+        window.selectedTypes = [];
+        otherCheckboxes.forEach(cb => cb.checked = false);
+      }
+      
+      updateConfigSummary();
+    }
+
+    // Mettre à jour la sélection du format
+    function updateFormatSelection() {
+      const format = document.querySelector('input[name="format"]:checked').value;
+      window.quizFormat = format;
+      
+      const seriesConfig = document.getElementById('seriesConfig');
+      seriesConfig.style.display = format === 'series' ? 'block' : 'none';
+      
+      updateConfigSummary();
+    }
+
+    // Sélectionner le nombre de séries
+    function selectSeriesCount(count) {
+      window.seriesCount = count;
+      
+      // Mettre à jour l'interface
+      document.querySelectorAll('.series-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (parseInt(btn.textContent) === count) {
+          btn.classList.add('selected');
+        }
+      });
+      
+      document.getElementById('totalQuestions').textContent = count * 5;
+      updateConfigSummary();
+    }
+
+    // Mettre à jour le résumé de configuration
+    function updateConfigSummary() {
+      const summaryContent = document.getElementById('summaryContent');
+      const generateBtn = document.getElementById('generateQuizBtn');
+      
+      if (window.selectedTypes.length === 0) {
+        summaryContent.innerHTML = 'Sélectionnez au moins un domaine pour commencer';
+        generateBtn.style.display = 'none';
+        return;
+      }
+      
+      const typeNames = window.selectedTypes.join(', ');
+      const totalAvailable = window.selectedTypes.reduce((sum, type) => 
+        sum + questionsBySubject[type].length, 0);
+      
+      let summary = `<strong>Domaines :</strong> ${typeNames}<br>`;
+      summary += `<strong>Questions disponibles :</strong> ${totalAvailable}<br>`;
+      
+      if (window.quizFormat === 'series') {
+        summary += `<strong>Format :</strong> ${window.seriesCount} séries de 5 questions (${window.seriesCount * 5} total)<br>`;
+        summary += `<strong>Classements :</strong> Après chaque série + final`;
+      } else {
+        summary += `<strong>Format :</strong> Marathon (toutes les questions d'affilée)<br>`;
+        summary += `<strong>Total :</strong> ${Math.min(totalAvailable, 50)} questions`;
+      }
+      
+      summaryContent.innerHTML = summary;
+      generateBtn.style.display = 'inline-block';
+    }
+
+    // Générer le quiz avec la configuration
+    function generateQuiz() {
+      if (window.selectedTypes.length === 0) {
+        alert('Veuillez sélectionner au moins un domaine !');
+        return;
+      }
+      
+      // Collecter toutes les questions des types sélectionnés
+      let allSelectedQuestions = [];
+      window.selectedTypes.forEach(type => {
+        allSelectedQuestions.push(...questionsBySubject[type]);
+      });
+      
+      // Mélanger et sélectionner les questions
+      allSelectedQuestions = shuffleArray(allSelectedQuestions);
+      
+      let finalQuestions = [];
+      if (window.quizFormat === 'series') {
+        const questionsNeeded = window.seriesCount * 5;
+        finalQuestions = allSelectedQuestions.slice(0, questionsNeeded);
+      } else {
+        finalQuestions = allSelectedQuestions.slice(0, Math.min(50, allSelectedQuestions.length));
+      }
+      
+      // Sauvegarder la configuration dans Firebase
+      database.ref('rooms/' + roomId).update({
+        questions: finalQuestions,
+        selectedTypes: window.selectedTypes,
+        quizFormat: window.quizFormat,
+        seriesCount: window.quizFormat === 'series' ? window.seriesCount : 1,
+        currentSeries: 0,
+        seriesScores: {}
+      });
       
       document.getElementById('startQuizBtn').style.display = 'inline-block';
       
       questionContainer.innerHTML = `
         <div class="question-card">
-          <h3>✅ Quiz configuré !</h3>
-          <p><strong>Type :</strong> ${type === 'mixed' ? 'Quiz mixte' : type}</p>
-          <p><strong>Nombre de questions :</strong> ${selectedQuestions.length}</p>
-          <p>Cliquez sur "Démarrer le Quiz" quand tous les joueurs sont prêts !</p>
+          <h3>✅ Quiz configuré avec succès !</h3>
+          <div class="final-config">
+            <div class="config-item">
+              <strong>📚 Domaines :</strong> ${window.selectedTypes.join(', ')}
+            </div>
+            <div class="config-item">
+              <strong>🎯 Format :</strong> ${window.quizFormat === 'series' ? `${window.seriesCount} séries de 5 questions` : 'Mode marathon'}
+            </div>
+            <div class="config-item">
+              <strong>❓ Total :</strong> ${finalQuestions.length} questions
+            </div>
+          </div>
+          <p style="margin: 20px 0; padding: 15px; background: rgba(40,167,69,0.1); border-radius: 10px; color: #28a745;">
+            🎮 Le quiz est prêt ! Cliquez sur "Démarrer le Quiz" quand tous les joueurs sont connectés.
+          </p>
         </div>
       `;
     }
@@ -3861,10 +4432,23 @@
         if (gameState === 'playing' && questionIndex !== currentQuestionIndex) {
           currentQuestionIndex = questionIndex;
           if (!isHost) {
-            showCurrentQuestion();
+            if (currentQuestionIndex >= questions.length) {
+              showPlayerWaiting();
+            } else {
+              showCurrentQuestion();
+            }
           }
         }
       });
+      
+      // Écouter les changements de série
+      roomRef.child('currentSeries').on('value', (snapshot) => {
+        const seriesNumber = snapshot.val();
+        if (seriesNumber !== undefined) {
+          window.currentSeries = seriesNumber;
+        }
+      });
+    }
     }
 
     // Mettre à jour la liste des joueurs
@@ -3890,10 +4474,16 @@
         // L'hôte démarre le quiz
         database.ref('rooms/' + roomId + '/state').set('playing');
         database.ref('rooms/' + roomId + '/currentQuestion').set(0);
+        database.ref('rooms/' + roomId + '/currentSeries').set(0);
         
-        // Récupérer les questions
-        database.ref('rooms/' + roomId + '/questions').once('value', (snapshot) => {
-          questions = snapshot.val() || [];
+        // Récupérer la configuration et les questions
+        database.ref('rooms/' + roomId).once('value', (snapshot) => {
+          const roomData = snapshot.val();
+          questions = roomData.questions || [];
+          window.quizFormat = roomData.quizFormat || 'series';
+          window.seriesCount = roomData.seriesCount || 1;
+          window.currentSeries = 0;
+          
           currentQuestionIndex = 0;
           score = 0;
           startTime = Date.now();
@@ -3901,8 +4491,13 @@
         });
       } else {
         // Le joueur commence à jouer
-        database.ref('rooms/' + roomId + '/questions').once('value', (snapshot) => {
-          questions = snapshot.val() || [];
+        database.ref('rooms/' + roomId).once('value', (snapshot) => {
+          const roomData = snapshot.val();
+          questions = roomData.questions || [];
+          window.quizFormat = roomData.quizFormat || 'series';
+          window.seriesCount = roomData.seriesCount || 1;
+          window.currentSeries = 0;
+          
           currentQuestionIndex = 0;
           score = 0;
           startTime = Date.now();
@@ -3915,31 +4510,68 @@
 
     // Afficher la question pour l'hôte
     function showHostQuestion() {
+      // Vérifier si on doit afficher un classement de série
+      if (window.quizFormat === 'series' && currentQuestionIndex > 0 && currentQuestionIndex % 5 === 0) {
+        const serieNumber = Math.floor(currentQuestionIndex / 5);
+        if (serieNumber <= window.seriesCount) {
+          showSeriesResults(serieNumber);
+          return;
+        }
+      }
+      
       if (currentQuestionIndex >= questions.length) {
         showMultiplayerResults();
         return;
       }
       
       const question = questions[currentQuestionIndex];
+      const currentSeriesNum = window.quizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
+      const questionInSeries = window.quizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
+      
+      // Écouter les réponses des joueurs
+      listenToPlayerAnswers();
       
       const html = `
         <div class="question-card">
           <div class="question-header">
             <div class="question-type">${question.type}</div>
-            <div>👑 Question ${currentQuestionIndex + 1}/${questions.length}</div>
+            <div>👑 ${window.quizFormat === 'series' ? `Série ${currentSeriesNum} - Question ${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
           </div>
           <div class="question-title">${question.title}</div>
-          <div style="margin: 20px 0; padding: 15px; background: rgba(0,200,0,0.1); border-radius: 10px;">
-            <strong>✅ Réponses correctes :</strong><br>
+          <div class="choices">
             ${question.choices.map((choice, i) => `
-              <div style="margin: 8px 0; padding: 10px; background: ${question.answer.includes(i) ? '#c8e6c9' : '#f5f5f5'}; border-radius: 5px;">
-                ${question.answer.includes(i) ? '✅' : '◯'} ${choice}
+              <div class="choice" data-choice="${i}" style="cursor: default;">
+                ${choice}
               </div>
             `).join('')}
           </div>
+          <div id="answerStatus" style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            <h4>📊 État des réponses :</h4>
+            <div id="playerAnswerStatus"></div>
+            <div style="margin: 10px 0;">
+              <strong>⏱️ Temps restant : <span id="hostTimer">30s</span></strong>
+            </div>
+          </div>
+          <div id="resultsSection" style="display: none;">
+            <div style="margin: 20px 0; padding: 15px; background: rgba(0,200,0,0.1); border-radius: 10px;">
+              <h4>✅ Réponses correctes :</h4>
+              ${question.choices.map((choice, i) => `
+                <div style="margin: 8px 0; padding: 10px; background: ${question.answer.includes(i) ? '#c8e6c9' : '#f5f5f5'}; border-radius: 5px;">
+                  ${question.answer.includes(i) ? '✅' : '◯'} ${choice}
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin: 20px 0; padding: 15px; background: #fff3cd; border-radius: 10px; color: #856404;">
+              ${question.explanation}
+            </div>
+            <div id="answerStats" style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;"></div>
+          </div>
           <div style="text-align: center; margin: 20px 0;">
-            <button onclick="nextMultiplayerQuestion()" style="font-size: 1.2em; padding: 15px 30px; background: #17a2b8;">
-              ➡️ Question suivante
+            <button onclick="showHostResults()" id="showResultsBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745; display: none;">
+              📊 Afficher les résultats
+            </button>
+            <button onclick="nextMultiplayerQuestion()" id="nextQuestionBtn" style="font-size: 1.2em; padding: 15px 30px; background: #17a2b8; display: none;">
+              ➡️ ${window.quizFormat === 'series' && questionInSeries === 5 ? 'Voir le classement' : 'Question suivante'}
             </button>
             <button onclick="endMultiplayerQuiz()" style="font-size: 1.2em; padding: 15px 30px; background: #dc3545;">
               🏁 Terminer le quiz
@@ -3951,6 +4583,147 @@
       questionContainer.innerHTML = html;
       updateScore();
       updateProgress();
+      
+      // Démarrer le timer de l'hôte
+      startHostTimer();
+    }
+
+    // Écouter les réponses des joueurs (hôte)
+    function listenToPlayerAnswers() {
+      const playersRef = database.ref('rooms/' + roomId + '/players');
+      
+      playersRef.on('value', (snapshot) => {
+        const allPlayers = snapshot.val() || {};
+        const playersList = Object.values(allPlayers);
+        const totalPlayers = playersList.length;
+        const answeredPlayers = playersList.filter(player => 
+          player.answers && player.answers[currentQuestionIndex]
+        ).length;
+        
+        // Mettre à jour le statut des réponses
+        document.getElementById('playerAnswerStatus').innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+            <span><strong>${answeredPlayers}/${totalPlayers}</strong> joueurs ont répondu</span>
+            <div style="background: rgba(255,255,255,0.2); border-radius: 10px; padding: 5px 10px;">
+              ${Math.round((answeredPlayers/totalPlayers)*100)}%
+            </div>
+          </div>
+          <div style="margin: 10px 0;">
+            ${playersList.map(player => {
+              const hasAnswered = player.answers && player.answers[currentQuestionIndex];
+              return `
+                <span style="display: inline-block; margin: 3px; padding: 5px 10px; border-radius: 15px; background: ${hasAnswered ? '#28a745' : '#6c757d'}; color: white; font-size: 0.9em;">
+                  ${hasAnswered ? '✅' : '⏳'} ${player.name}
+                </span>
+              `;
+            }).join('')}
+          </div>
+        `;
+        
+        // Afficher le bouton de résultats si tous ont répondu ou si le temps est écoulé
+        if (answeredPlayers === totalPlayers && totalPlayers > 0) {
+          document.getElementById('showResultsBtn').style.display = 'inline-block';
+          document.getElementById('hostTimer').parentElement.innerHTML = '<strong>✅ Tous les joueurs ont répondu !</strong>';
+        }
+      });
+    }
+
+    // Timer de l'hôte
+    function startHostTimer() {
+      let timeLeft = 30;
+      const timerElement = document.getElementById('hostTimer');
+      
+      const hostTimer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = `${timeLeft}s`;
+        
+        if (timeLeft <= 10) {
+          timerElement.style.color = '#e17055';
+        }
+        
+        if (timeLeft <= 0) {
+          clearInterval(hostTimer);
+          timerElement.parentElement.innerHTML = '<strong>⏰ Temps écoulé !</strong>';
+          document.getElementById('showResultsBtn').style.display = 'inline-block';
+        }
+      }, 1000);
+    }
+
+    // Afficher les résultats (hôte)
+    function showHostResults() {
+      const question = questions[currentQuestionIndex];
+      
+      // Récupérer les statistiques des réponses
+      database.ref('rooms/' + roomId + '/players').once('value', (snapshot) => {
+        const allPlayers = snapshot.val() || {};
+        const playersList = Object.values(allPlayers);
+        const stats = {};
+        let correctCount = 0;
+        
+        // Calculer les statistiques
+        question.choices.forEach((choice, index) => {
+          stats[index] = { count: 0, players: [] };
+        });
+        
+        playersList.forEach(player => {
+          if (player.answers && player.answers[currentQuestionIndex]) {
+            const answer = player.answers[currentQuestionIndex];
+            answer.choices.forEach(choiceIndex => {
+              stats[choiceIndex].count++;
+              stats[choiceIndex].players.push(player.name);
+            });
+            if (answer.correct) correctCount++;
+          }
+        });
+        
+        // Afficher les résultats
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('showResultsBtn').style.display = 'none';
+        document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+        
+        // Mettre à jour les choix avec les statistiques
+        const choicesContainer = document.querySelector('.choices');
+        choicesContainer.innerHTML = question.choices.map((choice, i) => {
+          const isCorrect = question.answer.includes(i);
+          const count = stats[i].count;
+          const percentage = playersList.length > 0 ? Math.round((count / playersList.length) * 100) : 0;
+          
+          return `
+            <div class="choice ${isCorrect ? 'correct' : ''}" style="position: relative; cursor: default;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>${choice}</span>
+                <span style="background: rgba(0,0,0,0.1); padding: 3px 8px; border-radius: 10px; font-size: 0.9em;">
+                  ${count} (${percentage}%)
+                </span>
+              </div>
+              ${count > 0 ? `
+                <div style="margin-top: 5px; font-size: 0.8em; opacity: 0.8;">
+                  👥 ${stats[i].players.join(', ')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+        
+        // Afficher les statistiques générales
+        document.getElementById('answerStats').innerHTML = `
+          <h4>📊 Statistiques de la question :</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 15px 0;">
+            <div style="text-align: center; padding: 10px; background: rgba(40, 167, 69, 0.2); border-radius: 10px;">
+              <div style="font-size: 1.5em; font-weight: bold; color: #28a745;">${correctCount}</div>
+              <div>Réponses correctes</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: rgba(220, 53, 69, 0.2); border-radius: 10px;">
+              <div style="font-size: 1.5em; font-weight: bold; color: #dc3545;">${playersList.length - correctCount}</div>
+              <div>Réponses incorrectes</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: rgba(23, 162, 184, 0.2); border-radius: 10px;">
+              <div style="font-size: 1.5em; font-weight: bold; color: #17a2b8;">${Math.round((correctCount/playersList.length)*100)}%</div>
+              <div>Taux de réussite</div>
+            </div>
+          </div>
+        `;
+      });
     }
 
     // Question suivante (multijoueur)
@@ -3958,6 +4731,19 @@
       currentQuestionIndex++;
       database.ref('rooms/' + roomId + '/currentQuestion').set(currentQuestionIndex);
       showHostQuestion();
+    }
+
+    // Écran d'attente pour les joueurs
+    function showPlayerWaiting() {
+      questionContainer.innerHTML = `
+        <div class="waiting-room">
+          <h3>⏳ En attente...</h3>
+          <p>L'hôte prépare la suite du quiz</p>
+          <div style="margin: 20px 0;">
+            <div style="font-size: 1.2em;">Votre score actuel : <strong>${score} points</strong></div>
+          </div>
+        </div>
+      `;
     }
 
     // Terminer le quiz (multijoueur)
@@ -3969,23 +4755,23 @@
     // Afficher la question pour les joueurs
     function showCurrentQuestion() {
       if (currentQuestionIndex >= questions.length || gameState === 'finished') {
-        showMultiplayerResults();
+        showPlayerWaiting();
         return;
       }
       
       const question = questions[currentQuestionIndex];
+      const currentSeriesNum = window.quizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
+      const questionInSeries = window.quizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
+      
       hasAnswered = false;
       selectedChoices = [];
       
-      // Démarrer le timer
-      timeLeft = 30;
-      startTimer();
-      
+      // Interface simplifiée pour les joueurs (télécommande)
       const html = `
         <div class="question-card">
           <div class="question-header">
             <div class="question-type">${question.type}</div>
-            <div>Question ${currentQuestionIndex + 1}/${questions.length}</div>
+            <div>📱 ${window.quizFormat === 'series' ? `Série ${currentSeriesNum} - Q${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
           </div>
           <div class="question-title">${question.title}</div>
           <div class="choices">
@@ -3995,10 +4781,15 @@
               </div>
             `).join('')}
           </div>
-          <div class="explanation" id="explanation">
-            ${question.explanation}
+          <div id="playerStatus" style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
+            <p>Sélectionnez votre/vos réponse(s) et validez</p>
+            ${window.quizFormat === 'series' ? `<small>Série ${currentSeriesNum} sur ${window.seriesCount} • Score actuel : ${score} pts</small>` : `<small>Score actuel : ${score} pts</small>`}
           </div>
-          <button onclick="submitMultiplayerAnswer()" id="submitBtn">📝 Valider ma réponse</button>
+          <div style="text-align: center;">
+            <button onclick="submitMultiplayerAnswer()" id="submitBtn" style="font-size: 1.3em; padding: 15px 40px;">
+              📝 Envoyer ma réponse
+            </button>
+          </div>
         </div>
       `;
       
@@ -4019,10 +4810,6 @@
       hasAnswered = true;
       const currentQuestion = questions[currentQuestionIndex];
       
-      // Arrêter le timer
-      clearInterval(timer);
-      timerDisplay.textContent = '';
-      
       // Vérifier la réponse
       const isCorrect = JSON.stringify(selectedChoices.sort()) === JSON.stringify(currentQuestion.answer.sort());
       if (isCorrect) {
@@ -4038,34 +4825,22 @@
       
       database.ref('rooms/' + roomId + '/players/' + playerId + '/score').set(score);
       
-      // Afficher le feedback visuel
-      document.querySelectorAll('.choice').forEach((choice, i) => {
-        const isCorrectAnswer = currentQuestion.answer.includes(i);
-        const isSelected = selectedChoices.includes(i);
-        
-        choice.style.pointerEvents = 'none';
-        
-        if (isCorrectAnswer) {
-          choice.classList.add('correct');
-        } else if (isSelected) {
-          choice.classList.add('incorrect');
-        }
-      });
-      
-      // Afficher l'explication
-      document.getElementById('explanation').classList.add('show');
-      
-      // Masquer le bouton
-      document.getElementById('submitBtn').style.display = 'none';
-      
       updateScore();
       
-      // Attendre la question suivante
-      questionContainer.innerHTML += `
-        <div style="text-align: center; margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-          ⏳ En attente de la question suivante...
+      // Interface simple de confirmation pour le joueur
+      document.getElementById('playerStatus').innerHTML = `
+        <div style="background: var(--color-success); color: white; padding: 15px; border-radius: 10px;">
+          ✅ <strong>Réponse envoyée !</strong><br>
+          <small>Attendez que l'hôte affiche les résultats sur l'écran principal</small>
         </div>
       `;
+      
+      // Masquer le bouton et désactiver les choix
+      document.getElementById('submitBtn').style.display = 'none';
+      document.querySelectorAll('.choice').forEach(choice => {
+        choice.style.pointerEvents = 'none';
+        choice.style.opacity = '0.6';
+      });
     }
 
     // Résultats multijoueur
@@ -4073,32 +4848,123 @@
       clearInterval(timer);
       
       if (isHost) {
-        // Vue hôte - classement
+        // Vue hôte - classement + récapitulatif complet
         const playersList = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
         
         const html = `
           <div class="final-results">
-            <h2>🏆 Classement final !</h2>
-            <div style="margin: 30px 0;">
-              ${playersList.map((player, index) => {
-                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
-                return `
-                  <div class="player-item" style="background: ${index < 3 ? 'rgba(255,215,0,0.2)' : 'rgba(255,255,255,0.1)'}; margin: 10px 0; font-size: 1.2em;">
-                    <span>${medal} ${player.isHost ? '👑 ' : ''}${player.name}</span>
-                    <span class="player-score">${player.score || 0}/${questions.length}</span>
-                  </div>
-                `;
-              }).join('')}
+            <h2>🏆 Résultats finaux !</h2>
+            
+            <!-- Onglets de navigation -->
+            <div class="results-tabs">
+              <button class="tab-btn active" onclick="showResultsTab('ranking', this)">🏆 Classement</button>
+              <button class="tab-btn" onclick="showResultsTab('review', this)">📚 Récapitulatif</button>
+              <button class="tab-btn" onclick="showResultsTab('stats', this)">📊 Statistiques</button>
             </div>
-            <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
-              🏠 Menu principal
-            </button>
+            
+            <!-- Onglet Classement -->
+            <div id="rankingTab" class="tab-content active">
+              <div style="margin: 30px 0;">
+                ${playersList.map((player, index) => {
+                  const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+                  const percentage = Math.round(((player.score || 0) / questions.length) * 100);
+                  return `
+                    <div class="player-item" style="background: ${index < 3 ? 'rgba(255,215,0,0.2)' : 'rgba(255,255,255,0.1)'}; margin: 10px 0; font-size: 1.2em;">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>${medal} ${player.isHost ? '👑 ' : ''}${player.name}</span>
+                        <div style="text-align: right;">
+                          <span class="player-score">${player.score || 0}/${questions.length}</span>
+                          <br><small>${percentage}%</small>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+            
+            <!-- Onglet Récapitulatif -->
+            <div id="reviewTab" class="tab-content">
+              <div style="margin: 20px 0;">
+                <h3>📚 Toutes les questions posées</h3>
+                <p style="opacity: 0.8; margin-bottom: 20px;">Cliquez sur une question pour voir les détails et statistiques</p>
+                <div id="questionsReview">
+                  ${questions.map((question, index) => `
+                    <div class="question-summary" onclick="toggleQuestionDetails(${index})">
+                      <div class="question-summary-header">
+                        <span class="question-number">Q${index + 1}</span>
+                        <span class="question-type-small">${question.type}</span>
+                        <span class="question-title-small">${question.title}</span>
+                        <span class="expand-icon">▼</span>
+                      </div>
+                      <div class="question-details" id="details${index}" style="display: none;">
+                        <div class="question-choices-review">
+                          ${question.choices.map((choice, i) => `
+                            <div class="choice-review ${question.answer.includes(i) ? 'correct' : ''}">
+                              ${question.answer.includes(i) ? '✅' : '◯'} ${choice}
+                            </div>
+                          `).join('')}
+                        </div>
+                        <div class="explanation-review">
+                          ${question.explanation}
+                        </div>
+                        <div class="question-stats" id="questionStats${index}">
+                          <em>Chargement des statistiques...</em>
+                        </div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Onglet Statistiques -->
+            <div id="statsTab" class="tab-content">
+              <div style="margin: 20px 0;">
+                <h3>📊 Statistiques générales</h3>
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <h3>${questions.length}</h3>
+                    <p>Questions posées</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3>${playersList.length}</h3>
+                    <p>Participants</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3>${Math.round(playersList.reduce((sum, p) => sum + (p.score || 0), 0) / playersList.length * 100 / questions.length)}%</h3>
+                    <p>Taux moyen de réussite</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3>${window.quizFormat === 'series' ? window.seriesCount : 1}</h3>
+                    <p>${window.quizFormat === 'series' ? 'Séries jouées' : 'Quiz marathon'}</p>
+                  </div>
+                </div>
+                <div id="detailedStats" style="margin: 30px 0;">
+                  <h4>📈 Questions les plus difficiles :</h4>
+                  <div id="difficultQuestions">Calcul en cours...</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+              <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
+                🏠 Menu principal
+              </button>
+              <button onclick="exportResults()" style="font-size: 1.2em; padding: 15px 30px; background: #17a2b8;">
+                📄 Exporter les résultats
+              </button>
+            </div>
           </div>
         `;
         
         questionContainer.innerHTML = html;
+        
+        // Charger les statistiques détaillées
+        loadDetailedStats();
+        
       } else {
-        // Vue joueur - score personnel
+        // Vue joueur - score personnel simplifié
         const percentage = Math.round((score / questions.length) * 100);
         
         let performance = '';
@@ -4119,7 +4985,9 @@
             <div style="font-size: 1.3em; margin: 15px 0;">
               ${performance}
             </div>
-            <p>Consultez le classement complet chez l'hôte !</p>
+            <p style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+              💡 L'hôte va afficher le récapitulatif complet des questions sur l'écran principal pour la discussion.
+            </p>
             <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
               🏠 Menu principal
             </button>
@@ -4127,6 +4995,214 @@
         `;
         
         questionContainer.innerHTML = html;
+      }
+    }
+
+    // Basculer entre les onglets de résultats
+    function showResultsTab(tabName, clickedElement) {
+      // Masquer tous les onglets
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Afficher l'onglet sélectionné
+      document.getElementById(tabName + 'Tab').classList.add('active');
+      clickedElement.classList.add('active');
+    }
+
+    // Basculer les détails d'une question
+    function toggleQuestionDetails(questionIndex) {
+      const details = document.getElementById(`details${questionIndex}`);
+      const summary = details.previousElementSibling;
+      const icon = summary.querySelector('.expand-icon');
+      
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+        icon.textContent = '▲';
+        
+        // Charger les statistiques de cette question
+        loadQuestionStats(questionIndex);
+      } else {
+        details.style.display = 'none';
+        icon.textContent = '▼';
+      }
+    }
+
+    // Charger les statistiques d'une question spécifique
+    function loadQuestionStats(questionIndex) {
+      database.ref('rooms/' + roomId + '/players').once('value', (snapshot) => {
+        const allPlayers = snapshot.val() || {};
+        const playersList = Object.values(allPlayers);
+        const question = questions[questionIndex];
+        
+        const stats = {};
+        let correctCount = 0;
+        let totalAnswers = 0;
+        
+        // Initialiser les statistiques
+        question.choices.forEach((choice, index) => {
+          stats[index] = { count: 0, players: [] };
+        });
+        
+        // Calculer les statistiques
+        playersList.forEach(player => {
+          if (player.answers && player.answers[questionIndex]) {
+            totalAnswers++;
+            const answer = player.answers[questionIndex];
+            answer.choices.forEach(choiceIndex => {
+              stats[choiceIndex].count++;
+              stats[choiceIndex].players.push(player.name);
+            });
+            if (answer.correct) correctCount++;
+          }
+        });
+        
+        const successRate = totalAnswers > 0 ? Math.round((correctCount / totalAnswers) * 100) : 0;
+        
+        // Afficher les statistiques
+        document.getElementById(`questionStats${questionIndex}`).innerHTML = `
+          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+            <h5>📊 Statistiques de cette question :</h5>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 10px 0;">
+              <div style="text-align: center; padding: 8px; background: rgba(40, 167, 69, 0.2); border-radius: 5px;">
+                <strong style="color: #28a745;">${correctCount}/${totalAnswers}</strong><br>
+                <small>Bonnes réponses</small>
+              </div>
+              <div style="text-align: center; padding: 8px; background: rgba(23, 162, 184, 0.2); border-radius: 5px;">
+                <strong style="color: #17a2b8;">${successRate}%</strong><br>
+                <small>Taux de réussite</small>
+              </div>
+            </div>
+            <div style="margin: 10px 0;">
+              <strong>Répartition des réponses :</strong>
+              ${question.choices.map((choice, i) => {
+                const count = stats[i].count;
+                const percentage = totalAnswers > 0 ? Math.round((count / totalAnswers) * 100) : 0;
+                return `
+                  <div style="margin: 5px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>${question.answer.includes(i) ? '✅' : '❌'} ${choice}</span>
+                      <span><strong>${count}</strong> (${percentage}%)</span>
+                    </div>
+                    ${count > 0 ? `<small style="opacity: 0.8;">👥 ${stats[i].players.join(', ')}</small>` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Charger les statistiques détaillées
+    function loadDetailedStats() {
+      database.ref('rooms/' + roomId + '/players').once('value', (snapshot) => {
+        const allPlayers = snapshot.val() || {};
+        const playersList = Object.values(allPlayers);
+        
+        // Calculer les questions les plus difficiles
+        const questionDifficulty = questions.map((question, index) => {
+          let correctCount = 0;
+          let totalAnswers = 0;
+          
+          playersList.forEach(player => {
+            if (player.answers && player.answers[index]) {
+              totalAnswers++;
+              if (player.answers[index].correct) correctCount++;
+            }
+          });
+          
+          const successRate = totalAnswers > 0 ? (correctCount / totalAnswers) * 100 : 0;
+          return {
+            index: index + 1,
+            title: question.title,
+            type: question.type,
+            successRate: Math.round(successRate),
+            correctCount,
+            totalAnswers
+          };
+        }).sort((a, b) => a.successRate - b.successRate);
+        
+        // Afficher les questions les plus difficiles
+        document.getElementById('difficultQuestions').innerHTML = `
+          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+            ${questionDifficulty.slice(0, 5).map((q, index) => `
+              <div style="margin: 10px 0; padding: 10px; background: rgba(220, 53, 69, 0.1); border-radius: 5px; border-left: 3px solid #dc3545;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong>Q${q.index}</strong> - ${q.type}<br>
+                    <small>${q.title.substring(0, 60)}${q.title.length > 60 ? '...' : ''}</small>
+                  </div>
+                  <div style="text-align: right;">
+                    <strong style="color: #dc3545;">${q.successRate}%</strong><br>
+                    <small>${q.correctCount}/${q.totalAnswers}</small>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      });
+    }
+
+    // Exporter les résultats
+    function exportResults() {
+      const playersList = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
+      
+      let exportText = `🏆 RÉSULTATS DU QUIZ DWWM\n`;
+      exportText += `================================\n\n`;
+      exportText += `📊 INFORMATIONS GÉNÉRALES\n`;
+      exportText += `- Questions posées : ${questions.length}\n`;
+      exportText += `- Participants : ${playersList.length}\n`;
+      exportText += `- Format : ${window.quizFormat === 'series' ? `${window.seriesCount} séries de 5 questions` : 'Mode marathon'}\n`;
+      exportText += `- Domaines : ${window.selectedTypes && window.selectedTypes.length > 0 ? window.selectedTypes.join(', ') : 'Mixte'}\n`;
+      exportText += `- Date : ${new Date().toLocaleDateString('fr-FR')}\n\n`;
+      
+      exportText += `🏆 CLASSEMENT FINAL\n`;
+      exportText += `==================\n`;
+      playersList.forEach((player, index) => {
+        const percentage = Math.round(((player.score || 0) / questions.length) * 100);
+        exportText += `${index + 1}. ${player.isHost ? '👑 ' : ''}${player.name} - ${player.score || 0}/${questions.length} (${percentage}%)\n`;
+      });
+      
+      exportText += `\n📚 RÉCAPITULATIF DES QUESTIONS\n`;
+      exportText += `==============================\n`;
+      questions.forEach((question, index) => {
+        exportText += `\nQ${index + 1} [${question.type}] ${question.title}\n`;
+        question.choices.forEach((choice, i) => {
+          exportText += `${question.answer.includes(i) ? '✅' : '  '} ${choice}\n`;
+        });
+        // Retirer les balises HTML de l'explication
+        const cleanExplanation = question.explanation.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ');
+        exportText += `💡 ${cleanExplanation}\n`;
+      });
+      
+      try {
+        // Créer et télécharger le fichier
+        const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `quiz-dwwm-resultats-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        alert('📄 Résultats exportés avec succès !');
+      } catch (error) {
+        // Fallback : copier dans le presse-papier
+        navigator.clipboard.writeText(exportText).then(() => {
+          alert('📄 Résultats copiés dans le presse-papier !');
+        }).catch(() => {
+          // Afficher dans une nouvelle fenêtre si tout échoue
+          const newWindow = window.open('', '_blank');
+          newWindow.document.write(`<pre>${exportText}</pre>`);
+          alert('📄 Résultats ouverts dans une nouvelle fenêtre. Copiez le contenu manuellement.');
+        });
       }
     }
 
@@ -4345,9 +5421,10 @@
       showQuestion();
     }
 
-    // Timer
+    // Timer (solo uniquement)
     function startTimer() {
-      if (isHost) {
+      // Le timer n'est utilisé qu'en mode solo
+      if (currentMode === 'host' || currentMode === 'join') {
         timerDisplay.textContent = '';
         return;
       }
@@ -4363,11 +5440,7 @@
         if (timeLeft <= 0) {
           clearInterval(timer);
           if (!hasAnswered) {
-            if (currentMode === 'host' || currentMode === 'join') {
-              submitMultiplayerAnswer();
-            } else {
-              submitAnswer();
-            }
+            submitAnswer();
           }
         }
       }, 1000);
@@ -4376,16 +5449,36 @@
     // Mise à jour du score
     function updateScore() {
       if (isHost) {
-        scoreText.textContent = `👑 Hôte - Question ${currentQuestionIndex + 1}/${questions.length}`;
+        if (window.quizFormat === 'series') {
+          const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
+          const totalSeries = window.seriesCount;
+          scoreText.textContent = `👑 Hôte - Série ${currentSeriesNum}/${totalSeries}`;
+        } else {
+          scoreText.textContent = `👑 Hôte - Question ${currentQuestionIndex + 1}/${questions.length}`;
+        }
       } else {
-        scoreText.textContent = `Score: ${score}/${Math.max(currentQuestionIndex, 1)} (${Math.round((score/Math.max(currentQuestionIndex, 1))*100)}%)`;
+        if (window.quizFormat === 'series') {
+          const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
+          const questionInSeries = (currentQuestionIndex % 5) + 1;
+          const totalSeries = window.seriesCount;
+          scoreText.textContent = `Score: ${score} pts | Série ${currentSeriesNum}/${totalSeries} (Q${questionInSeries}/5)`;
+        } else {
+          scoreText.textContent = `Score: ${score}/${Math.max(currentQuestionIndex, 1)} (${Math.round((score/Math.max(currentQuestionIndex, 1))*100)}%)`;
+        }
       }
     }
 
     // Mise à jour de la progression
     function updateProgress() {
-      const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-      progressFill.style.width = progress + '%';
+      if (window.quizFormat === 'series') {
+        const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
+        const questionInSeries = (currentQuestionIndex % 5) + 1;
+        const progress = (questionInSeries / 5) * 100;
+        progressFill.style.width = progress + '%';
+      } else {
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        progressFill.style.width = progress + '%';
+      }
     }
 
     // Résultats finaux (solo)
