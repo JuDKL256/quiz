@@ -63,6 +63,12 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
     
+    .mode-btn:disabled {
+      background: #999;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
     .game-area {
       background: rgba(255,255,255,0.2);
       border-radius: 15px;
@@ -216,11 +222,96 @@
       margin: 20px auto;
       display: inline-block;
     }
+    
+    .players-list {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+    
+    .player-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin: 5px 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+    }
+    
+    .status-indicator {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+    
+    .status-connected { background: #28a745; color: white; }
+    .status-waiting { background: #ffc107; color: #333; }
+    .status-answered { background: #17a2b8; color: white; }
+    
+    .firebase-setup {
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    
+    .firebase-setup code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .firebase-setup pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    
+    .offline-notice {
+      background: rgba(255, 193, 7, 0.2);
+      border: 2px solid #ffc107;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #856404;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🎯 Quiz DWWM Interactif</h1>
+    
+    <!-- Configuration Firebase -->
+    <div class="firebase-setup" id="firebaseSetup" style="display:none;">
+      <h3>🔧 Configuration Firebase requise</h3>
+      <p>Pour activer le mode multijoueur, configurez Firebase :</p>
+      
+      <ol style="margin: 15px 0;">
+        <li>Allez sur <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a></li>
+        <li>Créez un nouveau projet ou utilisez un existant</li>
+        <li>Activez "Realtime Database" avec les règles de test</li>
+        <li>Copiez la configuration et remplacez les valeurs ci-dessous</li>
+      </ol>
+      
+      <pre><code>// Remplacez ces valeurs dans le script
+const firebaseConfig = {
+  apiKey: "AIzaSyCOegG19Z-G04jRXBA3aXUSLTrHrPtEwbQ",
+  authDomain: "quiz-4321f.firebaseapp.com",
+  databaseURL: "https://quiz-4321f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "quiz-4321f",
+};</code></pre>
+      
+      <button onclick="document.getElementById('firebaseSetup').style.display='none'">✅ J'ai configuré Firebase</button>
+    </div>
     
     <!-- Menu principal -->
     <div id="mainMenu">
@@ -229,10 +320,14 @@
         Testez vos connaissances en développement web !
       </div>
       
+      <div class="offline-notice" id="offlineNotice" style="display:none;">
+        ⚠️ Mode multijoueur indisponible (Firebase non configuré). Le mode solo fonctionne normalement.
+      </div>
+      
       <div class="feature-list">
         <ul>
           <li>✅ <strong>Mode Solo</strong> - Entraînement personnel</li>
-          <li>🎮 <strong>Mode Multijoueur</strong> - PC hôte + mobiles joueurs</li>
+          <li>🎮 <strong>Mode Multijoueur</strong> - Synchronisation temps réel</li>
           <li>⚡ <strong>Questions mélangées</strong> - Jamais le même quiz</li>
           <li>🏆 <strong>Scores et classements</strong> - Compétition amicale</li>
           <li>📱 <strong>Mobile-friendly</strong> - Fonctionne partout</li>
@@ -245,12 +340,12 @@
           <small>Test rapide individuel</small>
         </button>
         
-        <button class="mode-btn" onclick="startHostMode()">
+        <button class="mode-btn" id="hostBtn" onclick="startHostMode()">
           🖥️ Mode Hôte<br>
           <small>Créer une partie multijoueur</small>
         </button>
         
-        <button class="mode-btn" onclick="startPlayerMode()">
+        <button class="mode-btn" id="joinBtn" onclick="showJoinInterface()">
           📱 Rejoindre<br>
           <small>Participer à une partie</small>
         </button>
@@ -275,8 +370,36 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <script>
-    // Questions DWWM - Ajoutez vos vraies questions ici
+    // ⚠️ CONFIGURATION FIREBASE - REMPLACEZ PAR VOS VRAIES VALEURS
+    const firebaseConfig = {
+      apiKey: "demo-api-key",
+      authDomain: "demo-project.firebaseapp.com",
+      databaseURL: "https://demo-project-default-rtdb.firebaseio.com/",
+      projectId: "demo-project"
+    };
+
+    // Variables globales
+    let firebaseEnabled = false;
+    let database = null;
+    let currentMode = '';
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let questions = [];
+    let selectedChoices = [];
+    let hasAnswered = false;
+    let timeLeft = 30;
+    let timer = null;
+    let roomCode = '';
+    let playerName = '';
+    let roomRef = null;
+    let playersRef = null;
+
+    // Questions DWWM
     const questionsBySubject = [
       {
         title: "Quel langage est principalement utilisé pour le développement web côté client ?",
@@ -329,16 +452,6 @@
         answer: [0, 3]
       }
     ];
-
-    // Variables globales
-    let currentMode = '';
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let questions = [];
-    let selectedChoices = [];
-    let hasAnswered = false;
-    let timeLeft = 30;
-    let timer = null;
     
     // Éléments DOM
     const mainMenu = document.getElementById('mainMenu');
@@ -349,13 +462,42 @@
     const timerDisplay = document.getElementById('timer');
     const connectionInfo = document.getElementById('connectionInfo');
 
-    // Mode Solo
+    // Initialisation Firebase
+    function initializeFirebase() {
+      try {
+        if (firebaseConfig.apiKey === "demo-api-key") {
+          throw new Error("Configuration demo détectée");
+        }
+        
+        firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        firebaseEnabled = true;
+        
+        console.log("✅ Firebase initialisé avec succès");
+        document.getElementById('offlineNotice').style.display = 'none';
+        
+      } catch (error) {
+        console.warn("⚠️ Firebase non configuré:", error.message);
+        firebaseEnabled = false;
+        
+        // Afficher le message d'aide
+        document.getElementById('firebaseSetup').style.display = 'block';
+        document.getElementById('offlineNotice').style.display = 'block';
+        
+        // Désactiver les boutons multijoueur
+        document.getElementById('hostBtn').disabled = true;
+        document.getElementById('joinBtn').disabled = true;
+        document.getElementById('hostBtn').innerHTML = '🖥️ Mode Hôte<br><small>Firebase requis</small>';
+        document.getElementById('joinBtn').innerHTML = '📱 Rejoindre<br><small>Firebase requis</small>';
+      }
+    }
+
+    // Mode Solo (fonctionne toujours)
     function startSoloMode() {
       currentMode = 'solo';
       mainMenu.style.display = 'none';
       gameArea.style.display = 'block';
       
-      // Initialiser le quiz
       questions = shuffleArray([...questionsBySubject]).slice(0, 5);
       currentQuestionIndex = 0;
       score = 0;
@@ -363,18 +505,26 @@
       showQuestion();
     }
 
-    // Mode Hôte
+    // Mode Hôte (Firebase requis)
     function startHostMode() {
+      if (!firebaseEnabled) {
+        alert('❌ Firebase n\'est pas configuré. Le mode multijoueur est indisponible.');
+        return;
+      }
+      
+      const hostName = prompt('Entrez votre nom (hôte):') || 'Hôte';
+      roomCode = generateRoomCode();
+      
       currentMode = 'host';
       mainMenu.style.display = 'none';
       gameArea.style.display = 'block';
       connectionInfo.style.display = 'block';
       
-      // Générer code de partie
-      const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      // Créer la partie dans Firebase
+      createFirebaseRoom(hostName);
       
       document.getElementById('roomCode').innerHTML = `
-        <h3>🏠 Vous êtes l'hôte</h3>
+        <h3>🏠 Vous êtes l'hôte (${hostName})</h3>
         <div style="font-size: 1.5em; margin: 15px 0; color: #FFD700;">
           Code de partie: <strong>${roomCode}</strong>
         </div>
@@ -386,18 +536,18 @@
         </div>
       `;
       
-      // Générer QR Code simple (texte)
       const url = `${window.location.origin}${window.location.pathname}?join=${roomCode}`;
       document.getElementById('qrCode').innerHTML = `
         <div style="color: #333; padding: 10px;">
           <strong>URL à partager :</strong><br>
-          <small>${url}</small><br>
-          <em>(Scannez ce texte ou partagez l'URL)</em>
+          <small style="word-break: break-all;">${url}</small><br>
+          <button onclick="copyToClipboard('${url}')" style="margin-top: 10px; padding: 8px 15px; font-size: 0.9em;">
+            📋 Copier l'URL
+          </button>
         </div>
       `;
       document.getElementById('qrCode').style.display = 'block';
       
-      // Afficher l'interface d'attente
       questionContainer.innerHTML = `
         <div style="text-align: center; font-size: 1.3em; padding: 40px;">
           👥 <strong>En attente des joueurs...</strong><br><br>
@@ -410,46 +560,112 @@
         </div>
       `;
       
-      // Initialiser le quiz (mais ne pas le démarrer)
+      // Initialiser les questions
       questions = shuffleArray([...questionsBySubject]).slice(0, 5);
       currentQuestionIndex = 0;
       score = 0;
+      
+      // Écouter les changements de joueurs
+      listenToPlayers();
     }
 
-    // Démarrer le quiz (appelé par l'hôte)
-    function startQuizAsHost() {
-      // Récupérer le code de la partie depuis l'affichage
-      const roomCodeElement = document.querySelector('#roomCode strong');
-      const roomCode = roomCodeElement ? roomCodeElement.textContent : 'XXXX';
+    // Interface pour rejoindre une partie
+    function showJoinInterface() {
+      if (!firebaseEnabled) {
+        alert('❌ Firebase n\'est pas configuré. Le mode multijoueur est indisponible.');
+        return;
+      }
       
-      // Cacher le bouton de démarrage
-      document.getElementById('roomCode').innerHTML = `
-        <h3>🏠 Quiz en cours</h3>
-        <div>Partie: <strong>${roomCode}</strong></div>
-        <p>🎯 Vous contrôlez le quiz</p>
+      mainMenu.style.display = 'none';
+      gameArea.style.display = 'block';
+      
+      questionContainer.innerHTML = `
+        <div class="question-card" style="text-align: center;">
+          <div class="question-title">🎮 Rejoindre une partie</div>
+          <div style="margin: 20px 0;">
+            <input type="text" id="joinRoomCode" placeholder="Code de la partie" 
+                   style="padding: 15px; font-size: 1.2em; border: 2px solid #ddd; border-radius: 10px; margin: 10px; width: 200px; text-align: center; text-transform: uppercase;">
+          </div>
+          <div style="margin: 20px 0;">
+            <input type="text" id="playerNameInput" placeholder="Votre nom" 
+                   style="padding: 15px; font-size: 1.2em; border: 2px solid #ddd; border-radius: 10px; margin: 10px; width: 200px; text-align: center;">
+          </div>
+          <div style="margin: 20px 0;">
+            <button onclick="attemptJoinRoom()" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;">
+              🚪 Rejoindre la partie
+            </button>
+            <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
+              🏠 Retour
+            </button>
+          </div>
+          <div id="joinError" style="color: #e17055; margin: 10px 0; font-weight: bold;"></div>
+        </div>
       `;
       
-      // Démarrer le quiz
-      showQuestion();
+      // Auto-remplir si on vient d'une URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const joinCode = urlParams.get('join');
+      if (joinCode) {
+        document.getElementById('joinRoomCode').value = joinCode;
+      }
+    }
+
+    // Tentative de rejoindre une partie
+    async function attemptJoinRoom() {
+      const code = document.getElementById('joinRoomCode').value.toUpperCase().trim();
+      const name = document.getElementById('playerNameInput').value.trim();
+      const errorDiv = document.getElementById('joinError');
+      
+      if (!code) {
+        errorDiv.textContent = '❌ Veuillez entrer un code de partie';
+        return;
+      }
+      
+      if (!name) {
+        errorDiv.textContent = '❌ Veuillez entrer votre nom';
+        return;
+      }
+      
+      try {
+        // Vérifier si la partie existe
+        const roomSnapshot = await database.ref(`rooms/${code}`).once('value');
+        
+        if (!roomSnapshot.exists()) {
+          errorDiv.textContent = '❌ Code de partie invalide';
+          return;
+        }
+        
+        const roomData = roomSnapshot.val();
+        
+        if (roomData.status !== 'waiting') {
+          errorDiv.textContent = '❌ Cette partie a déjà commencé ou est terminée';
+          return;
+        }
+        
+        // Rejoindre la partie
+        await joinFirebaseRoom(code, name);
+        startPlayerMode(code, name);
+        
+      } catch (error) {
+        console.error('Erreur lors de la connexion:', error);
+        errorDiv.textContent = '❌ Erreur de connexion';
+      }
     }
 
     // Mode Joueur
-    function startPlayerMode() {
-      const roomCode = prompt('Entrez le code de la partie :');
-      if (!roomCode) return;
-      
+    function startPlayerMode(code, name) {
       currentMode = 'player';
-      mainMenu.style.display = 'none';
-      gameArea.style.display = 'block';
+      roomCode = code;
+      playerName = name;
+      
       connectionInfo.style.display = 'block';
       
       document.getElementById('roomCode').innerHTML = `
-        <h3>📱 Joueur connecté</h3>
+        <h3>📱 Joueur: ${name}</h3>
         <div>Partie: <strong>${roomCode}</strong></div>
         <p>✅ Connexion réussie !</p>
       `;
       
-      // Interface d'attente
       questionContainer.innerHTML = `
         <div style="text-align: center; font-size: 1.3em; padding: 40px;">
           ⏳ <strong>En attente de l'hôte...</strong><br><br>
@@ -462,19 +678,166 @@
         </div>
       `;
       
-      // Simuler attente puis démarrage (en vrai ça viendrait du serveur)
-      setTimeout(() => {
-        document.getElementById('roomCode').innerHTML = `
-          <h3>📱 Quiz démarré</h3>
-          <div>Partie: <strong>${roomCode}</strong></div>
-          <p>🎯 Répondez aux questions !</p>
-        `;
+      // Écouter les changements de la partie
+      listenToRoomChanges();
+      listenToPlayers();
+    }
+
+    // Fonctions Firebase
+    function generateRoomCode() {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    async function createFirebaseRoom(hostName) {
+      roomRef = database.ref(`rooms/${roomCode}`);
+      playersRef = database.ref(`rooms/${roomCode}/players`);
+      
+      await roomRef.set({
+        hostName: hostName,
+        status: 'waiting',
+        currentQuestion: 0,
+        questions: questions,
+        created: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+
+    async function joinFirebaseRoom(code, name) {
+      roomCode = code;
+      playerName = name;
+      roomRef = database.ref(`rooms/${roomCode}`);
+      playersRef = database.ref(`rooms/${roomCode}/players`);
+      
+      await playersRef.child(name).set({
+        name: name,
+        score: 0,
+        status: 'connected',
+        answers: {},
+        joined: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+
+    function listenToRoomChanges() {
+      if (!roomRef) return;
+      
+      roomRef.on('value', (snapshot) => {
+        const roomData = snapshot.val();
+        if (!roomData) return;
         
-        questions = shuffleArray([...questionsBySubject]).slice(0, 5);
-        currentQuestionIndex = 0;
-        score = 0;
-        showQuestion();
-      }, 3000);
+        // Synchroniser l'état du quiz
+        if (roomData.status === 'playing' && currentMode === 'player') {
+          if (currentQuestionIndex === 0 && !hasAnswered) {
+            document.getElementById('roomCode').innerHTML = `
+              <h3>📱 Quiz démarré</h3>
+              <div>Partie: <strong>${roomCode}</strong></div>
+              <p>🎯 Répondez aux questions !</p>
+            `;
+            questions = roomData.questions;
+            showQuestion();
+          }
+          
+          // Vérifier si l'hôte a changé de question
+          if (roomData.currentQuestion !== currentQuestionIndex) {
+            currentQuestionIndex = roomData.currentQuestion;
+            if (currentQuestionIndex < questions.length) {
+              showQuestion();
+            } else {
+              showFinalResults();
+            }
+          }
+        }
+        
+        if (roomData.status === 'finished') {
+          showFinalResults();
+        }
+      });
+    }
+
+    function listenToPlayers() {
+      if (!playersRef) return;
+      
+      playersRef.on('value', (snapshot) => {
+        const players = snapshot.val() || {};
+        updatePlayersDisplay(players);
+      });
+    }
+
+    // Démarrer le quiz (appelé par l'hôte)
+    async function startQuizAsHost() {
+      await roomRef.update({ 
+        status: 'playing',
+        questions: questions
+      });
+      
+      document.getElementById('roomCode').innerHTML = `
+        <h3>🏠 Quiz en cours</h3>
+        <div>Partie: <strong>${roomCode}</strong></div>
+        <p>🎯 Vous contrôlez le quiz</p>
+      `;
+      
+      showQuestion();
+    }
+
+    // Question suivante (contrôlée par l'hôte)
+    async function nextQuestionAsHost() {
+      currentQuestionIndex++;
+      await roomRef.update({ currentQuestion: currentQuestionIndex });
+      showQuestion();
+    }
+
+    // Terminer le quiz manuellement (hôte)
+    async function endQuizAsHost() {
+      if (confirm('Êtes-vous sûr de vouloir terminer le quiz maintenant ?')) {
+        currentQuestionIndex = questions.length;
+        await roomRef.update({ 
+          currentQuestion: currentQuestionIndex,
+          status: 'finished'
+        });
+        showFinalResults();
+      }
+    }
+
+    // Mettre à jour l'affichage des joueurs
+    function updatePlayersDisplay(players) {
+      const playersListDiv = document.getElementById('playersList');
+      if (!playersListDiv) return;
+      
+      const playersList = Object.values(players || {});
+      
+      if (playersList.length === 0) {
+        playersListDiv.innerHTML = `
+          <div class="players-list">
+            <h4>👥 Joueurs connectés (0)</h4>
+            <p style="opacity: 0.7;">Aucun joueur pour le moment...</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = `
+        <div class="players-list">
+          <h4>👥 Joueurs connectés (${playersList.length})</h4>
+      `;
+      
+      playersList.forEach(player => {
+        let statusClass = 'status-connected';
+        let statusText = 'Connecté';
+        
+        if (currentMode === 'host') {
+          const hasAnsweredCurrent = player.answers && player.answers[currentQuestionIndex];
+          statusClass = hasAnsweredCurrent ? 'status-answered' : 'status-waiting';
+          statusText = hasAnsweredCurrent ? 'Répondu' : 'En cours...';
+        }
+        
+        html += `
+          <div class="player-item">
+            <span>🎮 ${player.name}</span>
+            <span class="status-indicator ${statusClass}">${statusText}</span>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      playersListDiv.innerHTML = html;
     }
 
     // Afficher une question
@@ -490,7 +853,6 @@
       
       let html = '';
       
-      // Interface différente selon le mode
       if (currentMode === 'host') {
         // Vue hôte - contrôle le quiz
         html = `
@@ -529,8 +891,6 @@
         
       } else {
         // Vue joueur/solo - peut répondre
-        
-        // Démarrer le timer seulement pour les joueurs
         timeLeft = 30;
         startTimer();
         
@@ -562,20 +922,6 @@
       updateProgress();
     }
 
-    // Question suivante (contrôlée par l'hôte)
-    function nextQuestionAsHost() {
-      currentQuestionIndex++;
-      showQuestion();
-    }
-
-    // Terminer le quiz manuellement (hôte)
-    function endQuizAsHost() {
-      if (confirm('Êtes-vous sûr de vouloir terminer le quiz maintenant ?')) {
-        currentQuestionIndex = questions.length; // Force la fin
-        showFinalResults();
-      }
-    }
-
     // Sélectionner une réponse
     function selectChoice(choiceIndex) {
       if (hasAnswered) return;
@@ -592,7 +938,7 @@
     }
 
     // Soumettre la réponse
-    function submitAnswer() {
+    async function submitAnswer() {
       if (hasAnswered || selectedChoices.length === 0) {
         if (selectedChoices.length === 0) {
           alert('Veuillez sélectionner au moins une réponse !');
@@ -603,12 +949,26 @@
       hasAnswered = true;
       const currentQuestion = questions[currentQuestionIndex];
       
-      // Arrêter le timer
       clearInterval(timer);
       
       // Vérifier la réponse
       const isCorrect = JSON.stringify(selectedChoices.sort()) === JSON.stringify(currentQuestion.answer.sort());
       if (isCorrect) score++;
+      
+      // Enregistrer la réponse du joueur dans Firebase
+      if (currentMode === 'player' && playersRef) {
+        try {
+          await playersRef.child(`${playerName}/answers/${currentQuestionIndex}`).set({
+            selected: selectedChoices,
+            correct: isCorrect,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          });
+          
+          await playersRef.child(`${playerName}/score`).set(score);
+        } catch (error) {
+          console.error('Erreur lors de l\'enregistrement:', error);
+        }
+      }
       
       // Afficher le feedback
       document.querySelectorAll('.choice').forEach((choice, i) => {
@@ -624,7 +984,6 @@
         }
       });
       
-      // Désactiver le bouton
       document.getElementById('submitBtn').disabled = true;
       document.getElementById('submitBtn').textContent = isCorrect ? '✅ Correct !' : '❌ Incorrect';
       
@@ -635,14 +994,12 @@
           showQuestion();
         }, 3000);
       } else {
-        // En mode multijoueur, attendre que l'hôte passe à la question suivante
         document.getElementById('submitBtn').textContent += ' - En attente de la question suivante...';
       }
     }
 
     // Timer
     function startTimer() {
-      // Le timer n'est affiché que pour les joueurs, pas pour l'hôte
       if (currentMode === 'host') {
         timerDisplay.textContent = '';
         return;
@@ -655,7 +1012,7 @@
         if (timeLeft <= 0) {
           clearInterval(timer);
           if (!hasAnswered) {
-            submitAnswer(); // Auto-submit
+            submitAnswer();
           }
         }
       }, 1000);
@@ -677,7 +1034,7 @@
     }
 
     // Résultats finaux
-    function showFinalResults() {
+    async function showFinalResults() {
       clearInterval(timer);
       timerDisplay.textContent = '';
       
@@ -685,6 +1042,19 @@
       
       if (currentMode === 'host') {
         // Vue hôte - résultats globaux
+        let players = {};
+        
+        if (playersRef) {
+          try {
+            const snapshot = await playersRef.once('value');
+            players = snapshot.val() || {};
+          } catch (error) {
+            console.error('Erreur lors de la récupération des scores:', error);
+          }
+        }
+        
+        const playersList = Object.values(players);
+        
         html = `
           <div class="final-results">
             <h2>🏆 Quiz terminé !</h2>
@@ -692,11 +1062,36 @@
               👑 Vous avez animé le quiz avec succès !
             </div>
             <div style="font-size: 1.2em; margin: 15px 0;">
-              ${questions.length} questions présentées
+              ${questions.length} questions présentées à ${playersList.length} joueur(s)
             </div>
+        `;
+        
+        if (playersList.length > 0) {
+          // Classement des joueurs
+          playersList.sort((a, b) => (b.score || 0) - (a.score || 0));
+          
+          html += `
             <div style="margin: 20px 0;">
-              💡 Les joueurs voient leurs scores individuels
-            </div>
+              <h3>🏅 Classement final :</h3>
+              <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin: 10px 0;">
+          `;
+          
+          playersList.forEach((player, index) => {
+            const trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+            const percentage = Math.round(((player.score || 0) / questions.length) * 100);
+            
+            html += `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; margin: 5px 0; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                <span>${trophy} ${player.name}</span>
+                <span style="font-weight: bold;">${player.score || 0}/${questions.length} (${percentage}%)</span>
+              </div>
+            `;
+          });
+          
+          html += '</div></div>';
+        }
+        
+        html += `
             <button onclick="restart()" style="font-size: 1.2em; padding: 15px 30px;">
               🔄 Nouveau quiz
             </button>
@@ -705,6 +1100,7 @@
             </button>
           </div>
         `;
+        
       } else {
         // Vue joueur/solo - score personnel
         const percentage = Math.round((score / questions.length) * 100);
@@ -742,24 +1138,44 @@
 
     // Redémarrer
     function restart() {
+      // Nettoyer les références Firebase
+      if (roomRef) {
+        roomRef.off();
+        roomRef = null;
+      }
+      if (playersRef) {
+        playersRef.off();
+        playersRef = null;
+      }
+      
       if (currentMode === 'solo') {
         startSoloMode();
       } else if (currentMode === 'host') {
         startHostMode();
       } else {
-        startPlayerMode();
+        showJoinInterface();
       }
     }
 
     // Retour au menu
     function goHome() {
+      // Nettoyer les références Firebase
+      if (roomRef) {
+        roomRef.off();
+        roomRef = null;
+      }
+      if (playersRef) {
+        playersRef.off();
+        playersRef = null;
+      }
+      
       gameArea.style.display = 'none';
       connectionInfo.style.display = 'none';
       mainMenu.style.display = 'block';
       clearInterval(timer);
     }
 
-    // Mélanger un tableau
+    // Utilitaires
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -769,14 +1185,40 @@
       return arr;
     }
 
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('URL copiée dans le presse-papier !');
+      }).catch(() => {
+        prompt('Copiez cette URL:', text);
+      });
+    }
+
     // Auto-join via URL
     window.addEventListener('load', () => {
+      initializeFirebase();
+      
       const urlParams = new URLSearchParams(window.location.search);
       const joinCode = urlParams.get('join');
-      if (joinCode) {
-        setTimeout(() => startPlayerMode(), 500);
+      if (joinCode && firebaseEnabled) {
+        setTimeout(() => showJoinInterface(), 1000);
       }
     });
+
+    // Nettoyage automatique des anciennes parties (toutes les 24h)
+    if (firebaseEnabled) {
+      setInterval(() => {
+        const cutoff = Date.now() - (24 * 60 * 60 * 1000); // 24 heures
+        database.ref('rooms').orderByChild('created').endAt(cutoff).once('value')
+          .then(snapshot => {
+            const updates = {};
+            snapshot.forEach(childSnapshot => {
+              updates[childSnapshot.key] = null;
+            });
+            return database.ref('rooms').update(updates);
+          })
+          .catch(error => console.warn('Erreur de nettoyage:', error));
+      }, 60 * 60 * 1000); // Vérifier toutes les heures
+    }
   </script>
 </body>
 </html>
