@@ -678,11 +678,50 @@
     
     .qr-code {
       background: white;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 25px;
+      border-radius: 15px;
       margin: 20px auto;
       display: inline-block;
       color: #333;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .qr-code h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+    }
+    
+    .qr-code #qrCanvas {
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .qr-share-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .share-method {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .share-method:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    
+    .share-method .icon {
+      font-size: 2em;
+      margin-bottom: 8px;
     }
     
     .players-list {
@@ -817,6 +856,9 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
 
   <script>
     // ⚠️ CONFIGURATION FIREBASE - VOS VRAIES VALEURS
@@ -4127,16 +4169,76 @@
         </div>
       `;
       
-      // Générer l'URL de partage
+      // Générer l'URL de partage et le QR Code
       const shareUrl = `${window.location.origin}${window.location.pathname}?join=${roomId}`;
-      document.getElementById('qrCode').innerHTML = `
-        <div style="text-align: center;">
-          <strong>URL à partager :</strong><br>
-          <input type="text" value="${shareUrl}" readonly style="width: 100%; padding: 5px; margin: 5px 0;" onclick="this.select()">
-          <br><small>Cliquez pour sélectionner et copier</small>
+      
+      // Créer le canvas pour le QR code
+      const qrContainer = document.getElementById('qrCode');
+      qrContainer.innerHTML = `
+        <div style="text-align: center; background: white; padding: 25px; border-radius: 15px; color: #333; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+          <h4 style="margin-bottom: 15px; color: #2c3e50;">📱 Rejoindre la partie</h4>
+          
+          <!-- QR Code -->
+          <div id="qrCanvas" style="margin: 15px 0;"></div>
+          
+          <!-- Code de la partie -->
+          <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+            <strong style="color: #2c3e50;">Code de la partie :</strong><br>
+            <div style="font-size: 1.8em; font-weight: bold; color: #e74c3c; margin: 8px 0; letter-spacing: 2px;">${roomId}</div>
+            <button onclick="copyRoomCode('${roomId}')" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 0.9em;">
+              📋 Copier le code
+            </button>
+          </div>
+          
+          <!-- Options de partage -->
+          <div class="qr-share-options">
+            <div class="share-method" onclick="copyShareUrl('${shareUrl}')">
+              <div class="icon">🔗</div>
+              <div style="font-weight: bold;">Copier l'URL</div>
+              <small>Lien direct</small>
+            </div>
+            <div class="share-method" onclick="shareQuiz('${roomId}', '${shareUrl}')">
+              <div class="icon">📤</div>
+              <div style="font-weight: bold;">Partager</div>
+              <small>Via applications</small>
+            </div>
+          </div>
+          
+          <div style="margin-top: 15px; padding: 10px; background: #e8f5e8; border-radius: 8px;">
+            <small style="color: #27ae60;">
+              <strong>💡 Comment rejoindre :</strong><br>
+              • Scannez le QR code avec votre téléphone<br>
+              • Ou allez sur le site et entrez le code <strong>${roomId}</strong>
+            </small>
+          </div>
         </div>
       `;
-      document.getElementById('qrCode').style.display = 'block';
+      
+      // Générer le QR code
+      QRCode.toCanvas(document.getElementById('qrCanvas'), shareUrl, {
+        width: 200,
+        height: 200,
+        colorDark: '#2c3e50',
+        colorLight: '#ffffff',
+        margin: 2,
+        errorCorrectionLevel: 'M'
+      }, function (error) {
+        if (error) {
+          console.error('Erreur génération QR code:', error);
+          // Fallback en cas d'erreur
+          document.getElementById('qrCanvas').innerHTML = `
+            <div style="width: 200px; height: 200px; background: #f8f9fa; border: 2px dashed #ddd; 
+                        display: flex; align-items: center; justify-content: center; margin: 0 auto; border-radius: 10px;">
+              <div style="text-align: center; color: #666;">
+                <div style="font-size: 2em; margin-bottom: 10px;">📱</div>
+                <div>QR Code<br>indisponible</div>
+              </div>
+            </div>
+          `;
+        }
+      });
+      
+      qrContainer.style.display = 'block';
     }
 
     // Sélection du type de quiz par l'hôte
@@ -4437,8 +4539,86 @@
           <div class="room-code-display">${roomId}</div>
           <p>✅ Vous êtes connecté en tant que <strong>${playerName}</strong></p>
           <p>En attente de l'hôte...</p>
+          <div style="margin: 15px 0;">
+            <button onclick="showPlayerQR()" style="background: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+              📱 Partager le QR code
+            </button>
+          </div>
         </div>
       `;
+    }
+
+    // Afficher le QR code pour les joueurs
+    function showPlayerQR() {
+      const shareUrl = `${window.location.origin}${window.location.pathname}?join=${roomId}`;
+      
+      // Créer une modal pour le QR code
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 15px; max-width: 400px; text-align: center; color: #333;">
+          <h3 style="margin-bottom: 20px; color: #2c3e50;">📱 Inviter d'autres joueurs</h3>
+          <div id="playerQrCanvas" style="margin: 20px 0;"></div>
+          <div style="margin: 15px 0;">
+            <strong>Code de la partie : ${roomId}</strong>
+          </div>
+          <div style="margin: 20px 0;">
+            <button onclick="copyRoomCode('${roomId}')" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+              📋 Copier le code
+            </button>
+            <button onclick="shareQuiz('${roomId}', '${shareUrl}')" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px;">
+              📤 Partager
+            </button>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            ✖️ Fermer
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Générer le QR code dans la modal
+      QRCode.toCanvas(modal.querySelector('#playerQrCanvas'), shareUrl, {
+        width: 200,
+        height: 200,
+        colorDark: '#2c3e50',
+        colorLight: '#ffffff',
+        margin: 2,
+        errorCorrectionLevel: 'M'
+      }, function (error) {
+        if (error) {
+          console.error('Erreur génération QR code:', error);
+          modal.querySelector('#playerQrCanvas').innerHTML = `
+            <div style="width: 200px; height: 200px; background: #f8f9fa; border: 2px dashed #ddd; 
+                        display: flex; align-items: center; justify-content: center; margin: 0 auto; border-radius: 10px;">
+              <div style="text-align: center; color: #666;">
+                <div style="font-size: 2em; margin-bottom: 10px;">📱</div>
+                <div>QR Code<br>indisponible</div>
+              </div>
+            </div>
+          `;
+        }
+      });
+      
+      // Fermer en cliquant sur l'arrière-plan
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
     }
 
     // Écouter les changements de la room
@@ -4481,6 +4661,7 @@
           // Mettre à jour la série actuelle
         }
       });
+    }
     }
 
     // Mettre à jour la liste des joueurs
@@ -5244,6 +5425,111 @@
     
     function generatePlayerId() {
       return Math.random().toString(36).substring(2, 15);
+    }
+
+    // Fonctions de partage
+    function copyRoomCode(code) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(() => {
+          showCopyFeedback('📋 Code copié !');
+        }).catch(() => {
+          fallbackCopy(code);
+        });
+      } else {
+        fallbackCopy(code);
+      }
+    }
+
+    function copyShareUrl(url) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          showCopyFeedback('🔗 URL copiée !');
+        }).catch(() => {
+          fallbackCopy(url);
+        });
+      } else {
+        fallbackCopy(url);
+      }
+    }
+
+    function shareQuiz(roomCode, url) {
+      const shareData = {
+        title: 'Quiz DWWM - Rejoignez la partie !',
+        text: `Rejoignez notre quiz DWWM ! Code de la partie : ${roomCode}`,
+        url: url
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(err => {
+          console.log('Erreur de partage:', err);
+          // Fallback : copier l'URL
+          copyShareUrl(url);
+        });
+      } else {
+        // Fallback pour les navigateurs sans Web Share API
+        const message = `🎯 Rejoignez notre Quiz DWWM !\n\nCode de la partie : ${roomCode}\n\nLien direct : ${url}`;
+        copyShareUrl(message);
+      }
+    }
+
+    function fallbackCopy(text) {
+      // Méthode de fallback pour copier
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showCopyFeedback('📋 Copié !');
+      } catch (err) {
+        console.error('Erreur de copie:', err);
+        alert(`Copiez ce code manuellement : ${text}`);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopyFeedback(message) {
+      // Créer une notification temporaire
+      const feedback = document.createElement('div');
+      feedback.textContent = message;
+      feedback.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #28a745;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      
+      // Ajouter l'animation CSS
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+          to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(feedback);
+      
+      // Supprimer après 2 secondes
+      setTimeout(() => {
+        feedback.remove();
+        style.remove();
+      }, 2000);
     }
 
     // === FONCTIONS SOLO (inchangées) ===
