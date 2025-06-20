@@ -1,4 +1,1064 @@
 const questionsBySubject = {
+      // Questions supplémentaires à ajouter au fichier questions.js
+// Basées sur le contenu des cours présents dans le contexte
+
+// Questions WORDPRESS (WP)
+"WordPress": [
+  {
+    "id": 1,
+    "type": "WordPress",
+    "title": "Qu'est-ce que WordPress ?",
+    "choices": [
+      "Un éditeur de texte",
+      "Un CMS open-source créé en 2003 par Matthew Mullenweg",
+      "Un langage de programmation",
+      "Un serveur web"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>WordPress est un CMS (Content Management System) open-source créé en 2003 par Matthew Mullenweg, écrit en PHP et utilisant MySQL.</p>"
+  },
+  {
+    "id": 2,
+    "type": "WordPress",
+    "title": "Quel pourcentage des sites web utilise WordPress ?",
+    "choices": [
+      "Plus de 43% des sites internet",
+      "Moins de 10%",
+      "Environ 25%",
+      "Plus de 80%"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>WordPress est utilisé par plus de 43% des sites internet, ce qui en fait le CMS le plus populaire au monde (63% d'utilisation parmi les sites utilisant un CMS).</p>"
+  },
+  {
+    "id": 3,
+    "type": "WordPress",
+    "title": "Quelle est la différence principale entre WordPress.org et WordPress.com ?",
+    "choices": [
+      "Il n'y a aucune différence",
+      "WordPress.org est auto-hébergé et plus flexible, WordPress.com est hébergé par Automattic",
+      "WordPress.com est gratuit, WordPress.org est payant",
+      "WordPress.org est pour les entreprises uniquement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>WordPress.org permet l'auto-hébergement avec contrôle total, tandis que WordPress.com est un service hébergé par Automattic avec moins de flexibilité.</p>"
+  },
+  {
+    "id": 4,
+    "type": "WordPress",
+    "title": "Quel dossier contient les thèmes, extensions et médias dans WordPress ?",
+    "choices": [
+      "wp-admin",
+      "wp-includes",
+      "wp-content",
+      "wp-core"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Le dossier wp-content contient tous les fichiers relatifs aux thèmes, extensions (plugins), bibliothèques de médias et traductions.</p>"
+  },
+  {
+    "id": 5,
+    "type": "WordPress",
+    "title": "Qu'est-ce qu'une extension (plugin) WordPress ?",
+    "choices": [
+      "Un thème graphique",
+      "Un module qui apporte des fonctionnalités complémentaires au cœur de WordPress",
+      "Un fichier de configuration",
+      "Un type de contenu"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Une extension permet d'apporter des fonctionnalités complémentaires au 'core' de WordPress pour répondre à des besoins spécifiques (sécurité, SEO, fonctionnalités).</p>"
+  },
+  {
+    "id": 6,
+    "type": "WordPress",
+    "title": "Comment créer un crochet personnalisé d'action dans WordPress ?",
+    "choices": [
+      "add_action('action_name')",
+      "do_action('action_name')",
+      "apply_filter('action_name')",
+      "create_hook('action_name')"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Pour créer et appeler un crochet d'action personnalisé, on utilise do_action('action_name') dans le code.</p>"
+  },
+  {
+    "id": 7,
+    "type": "WordPress",
+    "title": "Quel fichier WordPress tente d'appeler automatiquement lors de la suppression d'une extension ?",
+    "choices": [
+      "deactivate.php",
+      "uninstall.php",
+      "remove.php",
+      "delete.php"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>WordPress tente d'appeler automatiquement le fichier uninstall.php à la racine du dossier de l'extension supprimée pour nettoyer les données.</p>"
+  },
+  {
+    "id": 8,
+    "type": "WordPress",
+    "title": "Quelle est une faiblesse majeure de WordPress ?",
+    "choices": [
+      "Il est difficile à installer",
+      "Il ne supporte pas les commentaires",
+      "Il est la cible privilégiée des pirates informatiques du fait de sa popularité",
+      "Il ne permet pas d'étendre ses fonctionnalités"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>De par sa popularité, WordPress est la cible privilégiée des pirates informatiques qui recherchent la moindre faille de sécurité.</p>"
+  },
+  {
+    "id": 9,
+    "type": "WordPress",
+    "title": "Quels sont les deux types de crochets (hooks) WordPress ?",
+    "choices": [
+      "Actions et Events",
+      "Actions et Filters",
+      "Filters et Listeners",
+      "Events et Triggers"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Il existe deux types de hooks : les Actions (permettent de déclencher des fonctions à des moments clés) et les Filters (permettent d'intercepter et modifier une information).</p>"
+  },
+  {
+    "id": 10,
+    "type": "WordPress",
+    "title": "Comment créer un filter personnalisé dans WordPress ?",
+    "choices": [
+      "do_filter('filter_name')",
+      "apply_filter('filter_name')",
+      "add_filter('filter_name')",
+      "create_filter('filter_name')"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Pour créer et appeler un filter personnalisé, on utilise apply_filter('filter_name') avec possibilité de passer des paramètres.</p>"
+  },
+  {
+    "id": 11,
+    "type": "WordPress",
+    "title": "Qu'est-ce qu'un thème WordPress ?",
+    "choices": [
+      "Une extension de fonctionnalités",
+      "Un fichier de configuration",
+      "Un ensemble d'éléments graphiques et de logique d'affichage de la partie publique",
+      "Une base de données"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Un thème contient tous les éléments graphiques (assets, CSS, JS) ainsi que la logique d'affichage en PHP de la partie publique du site.</p>"
+  },
+  {
+    "id": 12,
+    "type": "WordPress",
+    "title": "Quelle classe WordPress permet de personnaliser les requêtes de récupération de contenus ?",
+    "choices": [
+      "WP_Query",
+      "WP_Request",
+      "WP_Content",
+      "WP_Database"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La classe WP_Query permet de préparer des requêtes personnalisées avec des paramètres de filtrage (author, cat, tag, etc.).</p>"
+  },
+  {
+    "id": 13,
+    "type": "WordPress",
+    "title": "Quelle fonction WordPress rend 'true' si des posts supplémentaires sont trouvés ?",
+    "choices": [
+      "the_post()",
+      "have_posts()",
+      "get_posts()",
+      "find_posts()"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La fonction have_posts() rend 'true' si des posts supplémentaires sont trouvés en fonction du contexte dans la boucle WordPress.</p>"
+  },
+  {
+    "id": 14,
+    "type": "WordPress",
+    "title": "Quelle fonction WordPress itère sur la boucle pour extraire le post suivant ?",
+    "choices": [
+      "have_posts()",
+      "the_post()",
+      "next_post()",
+      "get_post()"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La fonction the_post() itère sur la boucle et rend une instance de la classe WP_Post contenant les informations du post.</p>"
+  },
+  {
+    "id": 15,
+    "type": "WordPress",
+    "title": "Quelle fonction permet d'ajouter une page au menu d'administration WordPress ?",
+    "choices": [
+      "add_menu_page",
+      "create_admin_page",
+      "insert_menu_page",
+      "new_admin_menu"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La fonction add_menu_page permet d'ajouter une page au menu d'administration WordPress, avec add_submenu_page pour les sous-menus.</p>"
+  },
+  {
+    "id": 16,
+    "type": "WordPress",
+    "title": "Quelles sont les exigences techniques minimales pour WordPress 6.4 ?",
+    "choices": [
+      "PHP > 7.0, MySQL > 5.0",
+      "PHP > 7.4, MySQL > 5.7 ou MariaDB > 10.3",
+      "PHP > 8.0, MySQL > 6.0",
+      "PHP > 7.2, MySQL > 5.5"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>WordPress 6.4 nécessite PHP > 7.4, MySQL > 5.7 ou MariaDB > 10.3, et un serveur web avec réécriture d'URL.</p>"
+  },
+  {
+    "id": 17,
+    "type": "WordPress",
+    "title": "WordPress suit-il une architecture MVC ?",
+    "choices": [
+      "Oui, c'est un MVC strict",
+      "Non, il repose sur un 'cœur' avec des points de connexion (API et hooks)",
+      "Partiellement, seulement pour l'administration",
+      "Oui, mais seulement pour les thèmes"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>WordPress n'est pas MVC ! Il repose sur un 'cœur' (core) offrant des points de connexion (API et hooks) avec la partie publique déportée dans des thèmes.</p>"
+  },
+  {
+    "id": 18,
+    "type": "WordPress",
+    "title": "Combien de thèmes WordPress gratuits sont disponibles sur la bibliothèque officielle ?",
+    "choices": [
+      "Plus de 1 000 thèmes",
+      "Plus de 5 000 thèmes",
+      "Plus de 10 000 thèmes",
+      "Plus de 20 000 thèmes"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La bibliothèque officielle WordPress propose plus de 5 000 thèmes gratuits à disposition, avec une qualité et sécurité variable.</p>"
+  },
+  {
+    "id": 19,
+    "type": "WordPress",
+    "title": "Pourquoi éviter de coder dans le functions.php du thème ?",
+    "choices": [
+      "C'est plus lent",
+      "Cela crée une dépendance entre la logique métier et l'affichage public",
+      "C'est interdit par WordPress",
+      "Cela ne fonctionne pas"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Coder dans functions.php crée une dépendance entre la logique métier et l'affichage public du site, il vaut mieux créer une extension dédiée.</p>"
+  },
+  {
+    "id": 20,
+    "type": "WordPress",
+    "title": "Quelle constante sécurise l'appel du fichier uninstall.php ?",
+    "choices": [
+      "WP_UNINSTALL_PLUGIN",
+      "WP_SECURE_UNINSTALL",
+      "WP_PLUGIN_UNINSTALL",
+      "WP_SAFE_REMOVE"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La constante WP_UNINSTALL_PLUGIN sécurise contre l'appel statique direct du fichier uninstall.php lors de la suppression d'une extension.</p>"
+  }
+],
+
+// Questions SYMFONY
+"Symfony": [
+  {
+    "id": 1,
+    "type": "Symfony",
+    "title": "Qu'est-ce que Symfony ?",
+    "choices": [
+      "Un CMS comme WordPress",
+      "Un framework PHP pour le développement d'applications web",
+      "Un serveur web",
+      "Un éditeur de code"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Symfony est un framework PHP qui fournit des composants réutilisables et des outils pour développer des applications web robustes.</p>"
+  },
+  {
+    "id": 2,
+    "type": "Symfony",
+    "title": "Qu'est-ce qu'un contrôleur dans Symfony ?",
+    "choices": [
+      "Un fichier de configuration",
+      "Une simple classe PHP qui hérite du contrôleur de Symfony",
+      "Un template Twig",
+      "Une base de données"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Un contrôleur est une simple classe PHP qui hérite du contrôleur de Symfony (AbstractController) et contient les méthodes appelées par le système de routage.</p>"
+  },
+  {
+    "id": 3,
+    "type": "Symfony",
+    "title": "Que doit obligatoirement retourner une méthode de contrôleur Symfony ?",
+    "choices": [
+      "Un string",
+      "Un array",
+      "Un objet Response",
+      "Un objet Request"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Chaque méthode de contrôleur a une obligation : retourner un objet HttpFoundation\\Response.</p>"
+  },
+  {
+    "id": 4,
+    "type": "Symfony",
+    "title": "Comment créer une route en utilisant les attributs PHP 8 dans Symfony ?",
+    "choices": [
+      "En utilisant un fichier YAML",
+      "En ajoutant l'attribut #[Route] au-dessus de la méthode",
+      "En modifiant le .htaccess",
+      "En créant un fichier XML"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Avec PHP 8, on peut utiliser les attributs en ajoutant #[Route('/path')] au-dessus de chaque méthode de contrôleur.</p>"
+  },
+  {
+    "id": 5,
+    "type": "Symfony",
+    "title": "Quelle commande permet de créer un formulaire Symfony ?",
+    "choices": [
+      "symfony console make:form",
+      "symfony console create:form",
+      "symfony console generate:form",
+      "symfony console new:form"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console make:form' permet de créer une classe de formulaire associée à une entité.</p>"
+  },
+  {
+    "id": 6,
+    "type": "Symfony",
+    "title": "Quelle commande permet de créer le système d'authentification Symfony ?",
+    "choices": [
+      "symfony console make:security",
+      "symfony console make:auth",
+      "symfony console make:login",
+      "symfony console make:user-auth"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console make:auth' permet de créer le système d'authentification après avoir créé l'entité utilisateur.</p>"
+  },
+  {
+    "id": 7,
+    "type": "Symfony",
+    "title": "Quel est l'avantage principal des formulaires Symfony par rapport aux formulaires HTML classiques ?",
+    "choices": [
+      "Ils sont plus rapides à charger",
+      "Ils automatisent les tâches, simplifient la validation et lient automatiquement les données aux entités",
+      "Ils ne nécessitent pas de CSS",
+      "Ils fonctionnent sans JavaScript"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les formulaires Symfony automatisent les tâches répétitives, simplifient la validation et insèrent automatiquement les données dans l'entité lors de la soumission.</p>"
+  },
+  {
+    "id": 8,
+    "type": "Symfony",
+    "title": "Quelle commande permet de déboguer les routes Symfony ?",
+    "choices": [
+      "symfony console debug:router",
+      "symfony console show:routes",
+      "symfony console list:routes",
+      "symfony console route:debug"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console debug:router' affiche toutes les routes configurées dans l'application.</p>"
+  },
+  {
+    "id": 9,
+    "type": "Symfony",
+    "title": "Qu'est-ce que Doctrine dans Symfony ?",
+    "choices": [
+      "Un moteur de template",
+      "Un ORM (Object-Relational Mapping) pour gérer les données",
+      "Un système de routage",
+      "Un gestionnaire de sessions"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Doctrine est l'ORM de Symfony qui permet de mapper les objets PHP avec la base de données relationnelle.</p>"
+  },
+  {
+    "id": 10,
+    "type": "Symfony",
+    "title": "Qu'est-ce qu'une entité Doctrine ?",
+    "choices": [
+      "Un fichier de configuration",
+      "Une classe PHP représentant les données d'une table",
+      "Un contrôleur spécialisé",
+      "Un template Twig"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Une entité est une classe PHP qui représente les données : une classe → une table, une propriété → un champ de table.</p>"
+  },
+  {
+    "id": 11,
+    "type": "Symfony",
+    "title": "Quelle commande permet de créer une entité Doctrine ?",
+    "choices": [
+      "symfony console make:entity",
+      "symfony console create:entity",
+      "symfony console generate:entity",
+      "symfony console new:entity"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console make:entity' permet de créer une entité et d'ajouter/configurer ses champs.</p>"
+  },
+  {
+    "id": 12,
+    "type": "Symfony",
+    "title": "Comment mettre à jour la base de données après modification d'entités ?",
+    "choices": [
+      "symfony console doctrine:update",
+      "symfony console make:migration puis doctrine:migrations:migrate",
+      "symfony console database:sync",
+      "symfony console doctrine:schema:update"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>On utilise 'symfony console make:migration' pour créer la migration, puis 'symfony console doctrine:migrations:migrate' pour l'appliquer.</p>"
+  },
+  {
+    "id": 13,
+    "type": "Symfony",
+    "title": "Qu'est-ce que l'EntityManager dans Doctrine ?",
+    "choices": [
+      "Un contrôleur spécialisé",
+      "L'objet principal pour persister, récupérer et supprimer des entités",
+      "Un template engine",
+      "Un validateur de formulaires"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>L'EntityManager est l'objet central de Doctrine qui gère la persistance des entités avec ses méthodes persist(), flush(), find(), remove().</p>"
+  },
+  {
+    "id": 14,
+    "type": "Symfony",
+    "title": "Quelle annotation Doctrine définit une relation Many-to-One ?",
+    "choices": [
+      "@ORM\\ManyToOne",
+      "@Doctrine\\ManyToOne",
+      "@Relation\\ManyToOne",
+      "@Entity\\ManyToOne"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>L'annotation @ORM\\ManyToOne définit une relation où plusieurs entités peuvent être liées à une seule autre entité.</p>"
+  },
+  {
+    "id": 15,
+    "type": "Symfony",
+    "title": "Dans une relation ManyToMany, où Doctrine place-t-il la clé étrangère ?",
+    "choices": [
+      "Dans la première table",
+      "Dans la deuxième table",
+      "Doctrine crée une table de pivot",
+      "Dans les deux tables"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Pour les relations ManyToMany, Doctrine crée automatiquement une table de pivot pour stocker les associations.</p>"
+  },
+  {
+    "id": 16,
+    "type": "Symfony",
+    "title": "Qu'est-ce que le lazy loading dans Doctrine ?",
+    "choices": [
+      "Un système de cache",
+      "Le chargement automatique des entités associées à la demande",
+      "Une optimisation de requêtes",
+      "Un mode de développement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le lazy loading charge automatiquement les entités associées uniquement quand on y accède, évitant les requêtes inutiles.</p>"
+  },
+  {
+    "id": 17,
+    "type": "Symfony",
+    "title": "Que sont les fixtures dans Symfony ?",
+    "choices": [
+      "Des tests unitaires",
+      "Des jeux de données de test pour remplir la base",
+      "Des fichiers de configuration",
+      "Des templates de pages"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les fixtures permettent de créer des jeux de données de test pour remplir la base de données, souvent avec Faker pour générer des données aléatoires.</p>"
+  },
+  {
+    "id": 18,
+    "type": "Symfony",
+    "title": "Comment sauvegarder automatiquement les entités associées dans Doctrine ?",
+    "choices": [
+      "Avec auto_persist",
+      "Avec cascade: ['persist']",
+      "Avec auto_save",
+      "Avec persist_all"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>L'option cascade: ['persist'] dans les annotations de relation permet de sauvegarder automatiquement les entités associées.</p>"
+  },
+  {
+    "id": 19,
+    "type": "Symfony",
+    "title": "Quelle commande permet de créer le formulaire d'inscription utilisateur ?",
+    "choices": [
+      "symfony console make:registration-form",
+      "symfony console make:signup",
+      "symfony console make:user-form",
+      "symfony console make:register"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console make:registration-form' crée le formulaire d'inscription après avoir créé l'entité utilisateur et le système d'authentification.</p>"
+  },
+  {
+    "id": 20,
+    "type": "Symfony",
+    "title": "Quelle commande permet de tester le match entre une URL et une route ?",
+    "choices": [
+      "symfony console router:match /url-a-tester",
+      "symfony console route:test /url-a-tester",
+      "symfony console debug:url /url-a-tester",
+      "symfony console match:route /url-a-tester"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>La commande 'symfony console router:match /url-a-tester' permet de tester si une URL correspond à une route configurée.</p>"
+  }
+],
+
+// Questions ANALYSE ET CONCEPTION
+"Analyse et conception": [
+  {
+    "id": 1,
+    "type": "Analyse et conception",
+    "title": "Que signifie UML ?",
+    "choices": [
+      "Universal Markup Language",
+      "Unified Modeling Language",
+      "Uniform Management Language",
+      "Universal Method Language"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>UML signifie Unified Modeling Language, c'est un langage de modélisation unifié pour les systèmes.</p>"
+  },
+  {
+    "id": 2,
+    "type": "Analyse et conception",
+    "title": "Pourquoi modéliser un système avant de le réaliser ?",
+    "choices": [
+      "Pour perdre du temps",
+      "Pour communiquer, documenter, anticiper la complexité et produire plus rapidement",
+      "Parce que c'est obligatoire",
+      "Pour utiliser plus de ressources"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Modéliser permet de communiquer avec toutes les personnes du projet, documenter, tracer les modifications, anticiper la complexité et produire plus rapidement (Time to market).</p>"
+  },
+  {
+    "id": 3,
+    "type": "Analyse et conception",
+    "title": "UML est-il une méthode ou une notation ?",
+    "choices": [
+      "Une méthode",
+      "Une notation",
+      "Les deux à la fois",
+      "Ni l'un ni l'autre"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>UML est une notation, pas une méthode. C'est un langage visuel et commun pour modéliser les systèmes.</p>"
+  },
+  {
+    "id": 4,
+    "type": "Analyse et conception",
+    "title": "Quelle est la version actuelle d'UML ?",
+    "choices": [
+      "Version 2.0",
+      "Version 2.5 depuis 2015",
+      "Version 3.0",
+      "Version 1.5"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>UML est en version 2.5 depuis 2015.</p>"
+  },
+  {
+    "id": 5,
+    "type": "Analyse et conception",
+    "title": "Quels sont les deux niveaux d'abstraction des modèles UML ?",
+    "choices": [
+      "Simple et complexe",
+      "Vue d'ensemble et vue détaillée",
+      "Public et privé",
+      "Statique et dynamique"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les modèles UML offrent deux niveaux d'abstraction : vue d'ensemble et vue détaillée, permettant d'adapter le niveau de détail selon le besoin.</p>"
+  },
+  {
+    "id": 6,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce que le pattern Singleton ?",
+    "choices": [
+      "Un pattern qui permet de créer plusieurs instances",
+      "Un pattern de conception qui assure qu'une classe n'a qu'une seule instance",
+      "Un pattern pour les bases de données",
+      "Un pattern pour les interfaces utilisateur"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le Singleton est un pattern de conception qui garantit qu'une classe n'a qu'une seule instance et fournit un point d'accès global à cette instance.</p>"
+  },
+  {
+    "id": 7,
+    "type": "Analyse et conception",
+    "title": "Dans la modélisation des données, quelles sont les 3 étapes principales ?",
+    "choices": [
+      "Conception, Développement, Test",
+      "Conceptuelle, Relationnelle, Physique",
+      "Analyse, Design, Implémentation",
+      "Planification, Exécution, Validation"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les 3 étapes de modélisation des données sont : Modélisation conceptuelle (vue entreprise), Modélisation relationnelle, et Modélisation physique (vue système).</p>"
+  },
+  {
+    "id": 8,
+    "type": "Analyse et conception",
+    "title": "Un diagramme de classe d'analyse permet de représenter quoi ?",
+    "choices": [
+      "Le code source final",
+      "Les interactions entre utilisateurs",
+      "La structure statique du système avec les classes et leurs relations",
+      "Les processus métier"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Le diagramme de classe d'analyse représente la structure statique du système en montrant les classes, leurs attributs, méthodes et les relations entre elles.</p>"
+  },
+  {
+    "id": 9,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce qu'un diagramme de cas d'usage ?",
+    "choices": [
+      "Un diagramme montrant la structure des classes",
+      "Un diagramme représentant les interactions entre les acteurs et le système",
+      "Un diagramme de base de données",
+      "Un diagramme de déploiement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le diagramme de cas d'usage représente les interactions fonctionnelles entre les acteurs (utilisateurs) et le système à développer.</p>"
+  },
+  {
+    "id": 10,
+    "type": "Analyse et conception",
+    "title": "Dans la modélisation conceptuelle, que représente une entité ?",
+    "choices": [
+      "Une table de base de données",
+      "Un objet métier ou concept du domaine",
+      "Une classe Java",
+      "Un formulaire web"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Dans le modèle conceptuel, une entité représente un objet métier ou un concept important du domaine d'activité de l'entreprise.</p>"
+  },
+  {
+    "id": 11,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce qu'un diagramme de séquence ?",
+    "choices": [
+      "Un diagramme statique montrant les classes",
+      "Un diagramme dynamique montrant les interactions dans le temps",
+      "Un diagramme de base de données",
+      "Un diagramme d'architecture"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le diagramme de séquence est un diagramme dynamique UML qui montre les interactions entre objets dans un ordre chronologique.</p>"
+  },
+  {
+    "id": 12,
+    "type": "Analyse et conception",
+    "title": "Quel est l'objectif de la phase d'analyse des besoins ?",
+    "choices": [
+      "Écrire le code",
+      "Identifier et spécifier les besoins fonctionnels et non fonctionnels",
+      "Tester l'application",
+      "Déployer le système"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>L'analyse des besoins vise à identifier, comprendre et spécifier les besoins fonctionnels et non fonctionnels du système à développer.</p>"
+  },
+  {
+    "id": 13,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce qu'un pattern de conception (Design Pattern) ?",
+    "choices": [
+      "Un algorithme de tri",
+      "Une solution réutilisable à un problème récurrent de conception",
+      "Un diagramme UML",
+      "Un langage de programmation"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Un pattern de conception est une solution éprouvée et réutilisable pour résoudre un problème récurrent de conception logicielle.</p>"
+  },
+  {
+    "id": 14,
+    "type": "Analyse et conception",
+    "title": "Quelle est la différence entre modélisation conceptuelle et physique ?",
+    "choices": [
+      "Il n'y a pas de différence",
+      "Conceptuelle = vue entreprise, Physique = vue système technique",
+      "Conceptuelle = code, Physique = base de données",
+      "Conceptuelle = tests, Physique = déploiement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La modélisation conceptuelle représente la vue métier de l'entreprise, tandis que la modélisation physique représente la vue technique du système.</p>"
+  },
+  {
+    "id": 15,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce qu'un acteur dans un diagramme de cas d'usage ?",
+    "choices": [
+      "Un développeur",
+      "Une entité externe qui interagit avec le système",
+      "Une base de données",
+      "Un serveur web"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Un acteur représente une entité externe (utilisateur, système externe) qui interagit avec le système à développer.</p>"
+  },
+  {
+    "id": 16,
+    "type": "Analyse et conception",
+    "title": "Quel diagramme UML montre l'organisation statique du code ?",
+    "choices": [
+      "Diagramme de séquence",
+      "Diagramme de cas d'usage",
+      "Diagramme de classes",
+      "Diagramme d'activités"
+    ],
+    "answer": [2],
+    "explanation": "<h4>Explication</h4><p>Le diagramme de classes représente la structure statique du système en montrant les classes, leurs attributs, méthodes et relations.</p>"
+  },
+  {
+    "id": 17,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce que le pattern Observer ?",
+    "choices": [
+      "Un pattern de création d'objets",
+      "Un pattern comportemental définissant une dépendance un-à-plusieurs",
+      "Un pattern structural",
+      "Un pattern de base de données"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le pattern Observer définit une dépendance un-à-plusieurs où un sujet notifie automatiquement ses observateurs de tout changement d'état.</p>"
+  },
+  {
+    "id": 18,
+    "type": "Analyse et conception",
+    "title": "Dans UML, que représente une association ?",
+    "choices": [
+      "Un héritage entre classes",
+      "Une relation structurelle entre instances de classes",
+      "Une méthode de classe",
+      "Un attribut privé"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Une association UML représente une relation structurelle entre instances de classes, montrant comment les objets communiquent.</p>"
+  },
+  {
+    "id": 19,
+    "type": "Analyse et conception",
+    "title": "Qu'est-ce que la cardinalité dans un modèle de données ?",
+    "choices": [
+      "Le nombre de tables",
+      "Le nombre minimum et maximum d'occurrences dans une relation",
+      "Le nombre de colonnes",
+      "Le nombre de requêtes"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La cardinalité indique le nombre minimum et maximum d'occurrences d'une entité pouvant être en relation avec une occurrence d'une autre entité.</p>"
+  },
+  {
+    "id": 20,
+    "type": "Analyse et conception",
+    "title": "Pourquoi dit-on qu'il vaut mieux dessiner une maison avant de la construire ?",
+    "choices": [
+      "Pour perdre du temps",
+      "Pour anticiper les problèmes et communiquer la vision",
+      "Pour respecter la loi",
+      "Pour utiliser plus de matériaux"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>De même qu'il vaut mieux dessiner une maison avant de la construire, il vaut mieux modéliser un système avant de le réaliser pour anticiper la complexité et communiquer.</p>"
+  }
+      
+],
+
+// Questions SPRINGBOOT supplémentaires
+"SpringBoot": [
+  {
+    "id": 1,
+    "type": "SpringBoot",
+    "title": "Quel est le problème principal que résout Spring Boot ?",
+    "choices": [
+      "La lenteur des applications",
+      "La complexité et la configuration fastidieuse de Spring",
+      "Le manque de sécurité",
+      "L'incompatibilité avec Java"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot résout le problème de configuration complexe et fastidieuse de Spring grâce à l'auto-configuration et les starters.</p>"
+  },
+  {
+    "id": 2,
+    "type": "SpringBoot",
+    "title": "Qu'est-ce qu'un 'starter' dans Spring Boot ?",
+    "choices": [
+      "Un fichier de configuration",
+      "Une dépendance qui intègre automatiquement les modules nécessaires",
+      "Un contrôleur principal",
+      "Un template de page"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Un starter est une dépendance qui intègre automatiquement tous les modules Spring nécessaires pour une fonctionnalité spécifique (web, sécurité, données, etc.).</p>"
+  },
+  {
+    "id": 3,
+    "type": "SpringBoot",
+    "title": "Quelle annotation active l'auto-configuration dans Spring Boot ?",
+    "choices": [
+      "@EnableAutoConfiguration",
+      "@AutoConfig",
+      "@SpringBootAutoConfig",
+      "@ConfigureAuto"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>L'annotation @EnableAutoConfiguration permet d'utiliser l'auto-configuration de Spring Boot pour configurer automatiquement l'application.</p>"
+  },
+  {
+    "id": 4,
+    "type": "SpringBoot",
+    "title": "Quelle classe principale utilise Spring JDBC pour les requêtes SQL ?",
+    "choices": [
+      "DataSource",
+      "JdbcTemplate",
+      "SqlTemplate",
+      "DatabaseTemplate"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>JdbcTemplate est la classe principale de Spring JDBC, elle est thread-safe et permet le requêtage SQL avec abstraction des exceptions techniques.</p>"
+  },
+  {
+    "id": 5,
+    "type": "SpringBoot",
+    "title": "Dans quel fichier configure-t-on l'accès à la base de données dans Spring Boot ?",
+    "choices": [
+      "database.properties",
+      "application.properties",
+      "config.properties",
+      "spring.properties"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Le fichier application.properties contient la configuration de la DataSource (chaîne de connexion, utilisateur, mot de passe de la base de données).</p>"
+  },
+  {
+    "id": 6,
+    "type": "SpringBoot",
+    "title": "Quelle annotation permet de gérer les transactions dans Spring Boot ?",
+    "choices": [
+      "@Transaction",
+      "@Transactional",
+      "@EnableTransaction",
+      "@TransactionManager"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>L'annotation @Transactional permet de définir les méthodes transactionnelles dans la couche BLL selon les besoins métier.</p>"
+  },
+  {
+    "id": 7,
+    "type": "SpringBoot",
+    "title": "Les implémentations des DAO deviennent quoi dans Spring Boot ?",
+    "choices": [
+      "Des Services",
+      "Des Repository",
+      "Des Controllers",
+      "Des Entities"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les implémentations des DAO deviennent des Repository de Spring, auxquels on injecte NamedParameterJdbcTemplate pour gérer les requêtes.</p>"
+  },
+  {
+    "id": 8,
+    "type": "SpringBoot",
+    "title": "Spring Boot embarque quel type de serveur par défaut ?",
+    "choices": [
+      "Apache HTTP Server",
+      "Tomcat/Jetty",
+      "IIS",
+      "Nginx"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot embarque les serveurs Tomcat/Jetty par défaut, permettant de créer des applications packagées en JAR orientées micro-services.</p>"
+  },
+  {
+    "id": 9,
+    "type": "SpringBoot",
+    "title": "Quelle est la fonction d'un Repository dans Spring Boot ?",
+    "choices": [
+      "Gérer les vues",
+      "Encapsuler l'accès aux données et remplacer les DAO",
+      "Gérer les sessions utilisateur",
+      "Valider les formulaires"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les Repository Spring encapsulent l'accès aux données et remplacent les DAO traditionnels en utilisant NamedParameterJdbcTemplate.</p>"
+  },
+  {
+    "id": 10,
+    "type": "SpringBoot",
+    "title": "Comment Spring Boot choisit-il la solution de transaction ?",
+    "choices": [
+      "Au hasard",
+      "Selon les dépendances présentes dans le projet",
+      "Toujours JTA",
+      "Selon la configuration manuelle"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot choisit automatiquement la solution de transaction (JTA, JDBC, etc.) selon les dépendances détectées dans le projet.</p>"
+  },
+  {
+    "id": 11,
+    "type": "SpringBoot",
+    "title": "Qu'est-ce qu'une DataSource dans Spring Boot ?",
+    "choices": [
+      "Un fichier de données",
+      "Une fabrique de connexions vers une base de données",
+      "Un contrôleur spécialisé",
+      "Un template de requête"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Une DataSource est une fabrique de connexions vers une base de données, configurée via application.properties.</p>"
+  },
+  {
+    "id": 12,
+    "type": "SpringBoot",
+    "title": "Quelle propriété configure l'URL de base de données dans application.properties ?",
+    "choices": [
+      "spring.database.url",
+      "spring.datasource.url",
+      "spring.db.url",
+      "spring.connection.url"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>La propriété spring.datasource.url configure la chaîne de connexion à la base de données dans application.properties.</p>"
+  },
+  {
+    "id": 13,
+    "type": "SpringBoot",
+    "title": "Quelle est la caractéristique principale de JdbcTemplate ?",
+    "choices": [
+      "Il n'est pas thread-safe",
+      "Il est thread-safe et gère les exceptions SQL",
+      "Il ne supporte que MySQL",
+      "Il est obsolète"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>JdbcTemplate est thread-safe et abstrait les exceptions techniques SQL, permettant un requêtage simplifié.</p>"
+  },
+  {
+    "id": 14,
+    "type": "SpringBoot",
+    "title": "Comment Spring Boot gère-t-il les exceptions de base de données ?",
+    "choices": [
+      "Il les ignore",
+      "Elles sont transmises automatiquement par Spring JDBC à la BLL",
+      "Il les supprime",
+      "Il les transforme en erreurs 404"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Les exceptions de la couche base de données sont transmises automatiquement par Spring JDBC et doivent être gérées au niveau de la BLL.</p>"
+  },
+  {
+    "id": 15,
+    "type": "SpringBoot",
+    "title": "Quel starter Spring Boot utilise-t-on pour la sécurité ?",
+    "choices": [
+      "spring-boot-starter-security",
+      "spring-boot-starter-auth",
+      "spring-boot-starter-login",
+      "spring-boot-starter-user"
+    ],
+    "answer": [0],
+    "explanation": "<h4>Explication</h4><p>Le starter spring-boot-starter-security ajoute les dépendances Spring Security pour l'authentification et l'autorisation.</p>"
+  },
+  {
+    "id": 16,
+    "type": "SpringBoot",
+    "title": "Comment configurer un utilisateur par défaut en développement ?",
+    "choices": [
+      "Dans web.xml",
+      "Via spring.security.user.name et spring.security.user.password",
+      "Dans le contrôleur",
+      "Dans la base de données uniquement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>En mode développement, on peut déclarer un utilisateur par défaut avec spring.security.user.name et spring.security.user.password dans application.properties.</p>"
+  },
+  {
+    "id": 17,
+    "type": "SpringBoot",
+    "title": "Qu'est-ce que l'auto-configuration Spring Boot ?",
+    "choices": [
+      "Une configuration manuelle obligatoire",
+      "Une configuration automatique basée sur les dépendances détectées",
+      "Une configuration par défaut non modifiable",
+      "Une configuration XML uniquement"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>L'auto-configuration configure automatiquement l'application Spring en fonction des dépendances présentes dans le classpath.</p>"
+  },
+  {
+    "id": 18,
+    "type": "SpringBoot",
+    "title": "Spring Boot peut-il fonctionner avec Gradle ?",
+    "choices": [
+      "Non, seulement Maven",
+      "Oui, il peut fonctionner avec Gradle, Maven, etc.",
+      "Seulement avec des outils propriétaires",
+      "Seulement en ligne de commande"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot peut fonctionner avec différents outils de build comme Gradle, Maven, et d'autres systèmes de gestion de projet.</p>"
+  },
+  {
+    "id": 19,
+    "type": "SpringBoot",
+    "title": "Quel avantage apporte Spring Boot par rapport à Spring classique ?",
+    "choices": [
+      "Il est plus lent",
+      "Plus besoin d'intégrer manuellement tous les modules Spring",
+      "Il ne supporte pas la sécurité",
+      "Il ne fonctionne qu'avec Java 8"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot évite d'avoir à intégrer manuellement tous les modules Spring grâce aux starters et à l'auto-configuration.</p>"
+  },
+  {
+    "id": 20,
+    "type": "SpringBoot",
+    "title": "Pourquoi Spring Boot est-il orienté micro-services ?",
+    "choices": [
+      "Il ne peut gérer que de petites applications",
+      "Les applications sont packagées en JAR avec serveur embarqué",
+      "Il ne supporte pas les gros projets",
+      "Il est limité en fonctionnalités"
+    ],
+    "answer": [1],
+    "explanation": "<h4>Explication</h4><p>Spring Boot est orienté micro-services car il produit des applications packagées en JAR avec serveur embarqué, facilitant le déploiement et la scalabilité.</p>"
+  }
+]
+,
       "IDE": [
     {
       "id": 1,
