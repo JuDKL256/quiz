@@ -379,6 +379,11 @@
           Code de partie: <strong>${roomCode}</strong>
         </div>
         <p>Partagez ce code avec les joueurs !</p>
+        <div style="margin: 20px 0;">
+          <button onclick="startQuizAsHost()" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;">
+            🚀 Démarrer le Quiz
+          </button>
+        </div>
       `;
       
       // Générer QR Code simple (texte)
@@ -392,27 +397,40 @@
       `;
       document.getElementById('qrCode').style.display = 'block';
       
-      // Initialiser le quiz
+      // Afficher l'interface d'attente
+      questionContainer.innerHTML = `
+        <div style="text-align: center; font-size: 1.3em; padding: 40px;">
+          👥 <strong>En attente des joueurs...</strong><br><br>
+          <div style="margin: 20px 0;">
+            Les joueurs peuvent rejoindre avec le code: <strong style="color: #FFD700;">${roomCode}</strong>
+          </div>
+          <div style="font-size: 0.9em; opacity: 0.8;">
+            💡 Cliquez sur "Démarrer le Quiz" quand tout le monde est prêt !
+          </div>
+        </div>
+      `;
+      
+      // Initialiser le quiz (mais ne pas le démarrer)
       questions = shuffleArray([...questionsBySubject]).slice(0, 5);
       currentQuestionIndex = 0;
       score = 0;
+    }
+
+    // Démarrer le quiz (appelé par l'hôte)
+    function startQuizAsHost() {
+      // Récupérer le code de la partie depuis l'affichage
+      const roomCodeElement = document.querySelector('#roomCode strong');
+      const roomCode = roomCodeElement ? roomCodeElement.textContent : 'XXXX';
       
-      // Démarrer automatiquement après 5 secondes
-      let countdown = 5;
-      const countdownInterval = setInterval(() => {
-        questionContainer.innerHTML = `
-          <div style="text-align: center; font-size: 1.5em;">
-            🚀 Le quiz démarre dans ${countdown} secondes...<br>
-            <small>Les joueurs peuvent encore rejoindre !</small>
-          </div>
-        `;
-        countdown--;
-        
-        if (countdown < 0) {
-          clearInterval(countdownInterval);
-          showQuestion();
-        }
-      }, 1000);
+      // Cacher le bouton de démarrage
+      document.getElementById('roomCode').innerHTML = `
+        <h3>🏠 Quiz en cours</h3>
+        <div>Partie: <strong>${roomCode}</strong></div>
+        <p>🎯 Vous contrôlez le quiz</p>
+      `;
+      
+      // Démarrer le quiz
+      showQuestion();
     }
 
     // Mode Joueur
@@ -428,11 +446,30 @@
       document.getElementById('roomCode').innerHTML = `
         <h3>📱 Joueur connecté</h3>
         <div>Partie: <strong>${roomCode}</strong></div>
-        <p>En attente du début du quiz...</p>
+        <p>✅ Connexion réussie !</p>
       `;
       
-      // Simuler connexion et démarrage
+      // Interface d'attente
+      questionContainer.innerHTML = `
+        <div style="text-align: center; font-size: 1.3em; padding: 40px;">
+          ⏳ <strong>En attente de l'hôte...</strong><br><br>
+          <div style="margin: 20px 0;">
+            L'hôte va démarrer le quiz quand tout le monde sera prêt
+          </div>
+          <div style="font-size: 0.9em; opacity: 0.8;">
+            💡 Restez sur cette page, le quiz commencera automatiquement !
+          </div>
+        </div>
+      `;
+      
+      // Simuler attente puis démarrage (en vrai ça viendrait du serveur)
       setTimeout(() => {
+        document.getElementById('roomCode').innerHTML = `
+          <h3>📱 Quiz démarré</h3>
+          <div>Partie: <strong>${roomCode}</strong></div>
+          <p>🎯 Répondez aux questions !</p>
+        `;
+        
         questions = shuffleArray([...questionsBySubject]).slice(0, 5);
         currentQuestionIndex = 0;
         score = 0;
@@ -451,36 +488,92 @@
       hasAnswered = false;
       selectedChoices = [];
       
-      // Démarrer le timer
-      timeLeft = 30;
-      startTimer();
+      let html = '';
       
-      // Afficher la question
-      let html = `
-        <div class="question-card">
-          <div class="question-title">
-            Question ${currentQuestionIndex + 1}/${questions.length}: ${question.title}
-          </div>
-          <div class="choices">
-      `;
-      
-      question.choices.forEach((choice, i) => {
+      // Interface différente selon le mode
+      if (currentMode === 'host') {
+        // Vue hôte - contrôle le quiz
+        html = `
+          <div class="question-card">
+            <div class="question-title">
+              👑 Question ${currentQuestionIndex + 1}/${questions.length}: ${question.title}
+            </div>
+            <div style="margin: 20px 0; padding: 15px; background: rgba(0,200,0,0.1); border-radius: 10px;">
+              <strong>✅ Réponses correctes :</strong><br>
+        `;
+        
+        question.choices.forEach((choice, i) => {
+          const isCorrect = question.answer.includes(i);
+          html += `
+            <div style="margin: 8px 0; padding: 10px; background: ${isCorrect ? '#c8e6c9' : '#f5f5f5'}; border-radius: 5px;">
+              ${isCorrect ? '✅' : '◯'} ${choice}
+            </div>
+          `;
+        });
+        
         html += `
-          <div class="choice" onclick="selectChoice(${i})" data-choice="${i}">
-            ${choice}
+            </div>
+            <div style="text-align: center; margin: 20px 0;">
+              <button onclick="nextQuestionAsHost()" style="font-size: 1.2em; padding: 15px 30px; background: #17a2b8; margin: 5px;">
+                ➡️ Question suivante
+              </button>
+              <button onclick="endQuizAsHost()" style="font-size: 1.2em; padding: 15px 30px; background: #dc3545; margin: 5px;">
+                🏁 Terminer le quiz
+              </button>
+            </div>
+            <div style="font-size: 0.9em; opacity: 0.7; text-align: center;">
+              💡 Les joueurs voient cette question et peuvent répondre
+            </div>
           </div>
         `;
-      });
-      
-      html += `
+        
+      } else {
+        // Vue joueur/solo - peut répondre
+        
+        // Démarrer le timer seulement pour les joueurs
+        timeLeft = 30;
+        startTimer();
+        
+        html = `
+          <div class="question-card">
+            <div class="question-title">
+              Question ${currentQuestionIndex + 1}/${questions.length}: ${question.title}
+            </div>
+            <div class="choices">
+        `;
+        
+        question.choices.forEach((choice, i) => {
+          html += `
+            <div class="choice" onclick="selectChoice(${i})" data-choice="${i}">
+              ${choice}
+            </div>
+          `;
+        });
+        
+        html += `
+            </div>
+            <button onclick="submitAnswer()" id="submitBtn">📝 Valider ma réponse</button>
           </div>
-          <button onclick="submitAnswer()" id="submitBtn">📝 Valider ma réponse</button>
-        </div>
-      `;
+        `;
+      }
       
       questionContainer.innerHTML = html;
       updateScore();
       updateProgress();
+    }
+
+    // Question suivante (contrôlée par l'hôte)
+    function nextQuestionAsHost() {
+      currentQuestionIndex++;
+      showQuestion();
+    }
+
+    // Terminer le quiz manuellement (hôte)
+    function endQuizAsHost() {
+      if (confirm('Êtes-vous sûr de vouloir terminer le quiz maintenant ?')) {
+        currentQuestionIndex = questions.length; // Force la fin
+        showFinalResults();
+      }
     }
 
     // Sélectionner une réponse
@@ -535,15 +628,26 @@
       document.getElementById('submitBtn').disabled = true;
       document.getElementById('submitBtn').textContent = isCorrect ? '✅ Correct !' : '❌ Incorrect';
       
-      // Question suivante après 3 secondes
-      setTimeout(() => {
-        currentQuestionIndex++;
-        showQuestion();
-      }, 3000);
+      // En mode solo, passer automatiquement à la question suivante
+      if (currentMode === 'solo') {
+        setTimeout(() => {
+          currentQuestionIndex++;
+          showQuestion();
+        }, 3000);
+      } else {
+        // En mode multijoueur, attendre que l'hôte passe à la question suivante
+        document.getElementById('submitBtn').textContent += ' - En attente de la question suivante...';
+      }
     }
 
     // Timer
     function startTimer() {
+      // Le timer n'est affiché que pour les joueurs, pas pour l'hôte
+      if (currentMode === 'host') {
+        timerDisplay.textContent = '';
+        return;
+      }
+      
       timer = setInterval(() => {
         timeLeft--;
         timerDisplay.textContent = `⏱️ ${timeLeft}s`;
@@ -559,7 +663,11 @@
 
     // Mise à jour du score
     function updateScore() {
-      scoreDisplay.textContent = `Score: ${score}/${currentQuestionIndex} | Question ${currentQuestionIndex + 1}/${questions.length}`;
+      if (currentMode === 'host') {
+        scoreDisplay.textContent = `👑 Hôte - Question ${currentQuestionIndex + 1}/${questions.length}`;
+      } else {
+        scoreDisplay.textContent = `Score: ${score}/${currentQuestionIndex} | Question ${currentQuestionIndex + 1}/${questions.length}`;
+      }
     }
 
     // Mise à jour de la progression
@@ -571,36 +679,65 @@
     // Résultats finaux
     function showFinalResults() {
       clearInterval(timer);
-      const percentage = Math.round((score / questions.length) * 100);
-      
-      let performance = '';
-      if (percentage >= 80) performance = '🏆 Excellent !';
-      else if (percentage >= 60) performance = '👏 Bien joué !';
-      else if (percentage >= 40) performance = '📚 À retravailler';
-      else performance = '💪 Continuez vos efforts !';
-      
-      questionContainer.innerHTML = `
-        <div class="final-results">
-          <h2>🎯 Quiz terminé !</h2>
-          <div style="font-size: 2em; margin: 20px 0;">
-            ${score}/${questions.length}
-          </div>
-          <div style="font-size: 1.5em; margin: 15px 0;">
-            ${percentage}% de réussite
-          </div>
-          <div style="font-size: 1.3em; margin: 15px 0;">
-            ${performance}
-          </div>
-          <button onclick="restart()" style="font-size: 1.2em; padding: 15px 30px;">
-            🔄 Refaire un quiz
-          </button>
-          <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
-            🏠 Menu principal
-          </button>
-        </div>
-      `;
-      
       timerDisplay.textContent = '';
+      
+      let html = '';
+      
+      if (currentMode === 'host') {
+        // Vue hôte - résultats globaux
+        html = `
+          <div class="final-results">
+            <h2>🏆 Quiz terminé !</h2>
+            <div style="font-size: 1.5em; margin: 20px 0;">
+              👑 Vous avez animé le quiz avec succès !
+            </div>
+            <div style="font-size: 1.2em; margin: 15px 0;">
+              ${questions.length} questions présentées
+            </div>
+            <div style="margin: 20px 0;">
+              💡 Les joueurs voient leurs scores individuels
+            </div>
+            <button onclick="restart()" style="font-size: 1.2em; padding: 15px 30px;">
+              🔄 Nouveau quiz
+            </button>
+            <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
+              🏠 Menu principal
+            </button>
+          </div>
+        `;
+      } else {
+        // Vue joueur/solo - score personnel
+        const percentage = Math.round((score / questions.length) * 100);
+        
+        let performance = '';
+        if (percentage >= 80) performance = '🏆 Excellent !';
+        else if (percentage >= 60) performance = '👏 Bien joué !';
+        else if (percentage >= 40) performance = '📚 À retravailler';
+        else performance = '💪 Continuez vos efforts !';
+        
+        html = `
+          <div class="final-results">
+            <h2>🎯 Quiz terminé !</h2>
+            <div style="font-size: 2em; margin: 20px 0;">
+              ${score}/${questions.length}
+            </div>
+            <div style="font-size: 1.5em; margin: 15px 0;">
+              ${percentage}% de réussite
+            </div>
+            <div style="font-size: 1.3em; margin: 15px 0;">
+              ${performance}
+            </div>
+            <button onclick="restart()" style="font-size: 1.2em; padding: 15px 30px;">
+              🔄 Refaire un quiz
+            </button>
+            <button onclick="goHome()" style="font-size: 1.2em; padding: 15px 30px; background: #6c757d;">
+              🏠 Menu principal
+            </button>
+          </div>
+        `;
+      }
+      
+      questionContainer.innerHTML = html;
     }
 
     // Redémarrer
