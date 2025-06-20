@@ -819,6 +819,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
+    // ⚠️ CONFIGURATION FIREBASE - VOS VRAIES VALEURS
     const firebaseConfig = {
       apiKey: "AIzaSyCOegG19Z-G04jRXBA3aXUSLTrHrPtEwbQ",
       authDomain: "quiz-4321f.firebaseapp.com",
@@ -4015,7 +4016,6 @@
     }
   ]
     };
-
     // Variables globales
     let currentMode = '';
     let selectedType = '';
@@ -4207,10 +4207,11 @@
         </div>
       `;
       
-      // Variables pour la configuration
-      window.selectedTypes = [];
-      window.seriesCount = 3;
-      window.quizFormat = 'series';
+    // Initialiser les variables globales pour la configuration
+    window.selectedTypes = [];
+    window.seriesCount = 3;
+    window.quizFormat = 'series';
+    window.currentSeries = 0;
     }
 
     // Mettre à jour la sélection des types
@@ -4264,6 +4265,11 @@
       // Mettre à jour l'interface
       document.querySelectorAll('.series-btn').forEach(btn => {
         btn.classList.remove('selected');
+      });
+      
+      // Trouver et sélectionner le bon bouton
+      const buttons = document.querySelectorAll('.series-btn');
+      buttons.forEach(btn => {
         if (parseInt(btn.textContent) === count) {
           btn.classList.add('selected');
         }
@@ -4278,15 +4284,18 @@
       const summaryContent = document.getElementById('summaryContent');
       const generateBtn = document.getElementById('generateQuizBtn');
       
-      if (window.selectedTypes.length === 0) {
+      if (!summaryContent || !generateBtn) return;
+      
+      if (!window.selectedTypes || window.selectedTypes.length === 0) {
         summaryContent.innerHTML = 'Sélectionnez au moins un domaine pour commencer';
         generateBtn.style.display = 'none';
         return;
       }
       
       const typeNames = window.selectedTypes.join(', ');
-      const totalAvailable = window.selectedTypes.reduce((sum, type) => 
-        sum + questionsBySubject[type].length, 0);
+      const totalAvailable = window.selectedTypes.reduce((sum, type) => {
+        return sum + (questionsBySubject[type] ? questionsBySubject[type].length : 0);
+      }, 0);
       
       let summary = `<strong>Domaines :</strong> ${typeNames}<br>`;
       summary += `<strong>Questions disponibles :</strong> ${totalAvailable}<br>`;
@@ -4305,7 +4314,7 @@
 
     // Générer le quiz avec la configuration
     function generateQuiz() {
-      if (window.selectedTypes.length === 0) {
+      if (!window.selectedTypes || window.selectedTypes.length === 0) {
         alert('Veuillez sélectionner au moins un domaine !');
         return;
       }
@@ -4313,7 +4322,9 @@
       // Collecter toutes les questions des types sélectionnés
       let allSelectedQuestions = [];
       window.selectedTypes.forEach(type => {
-        allSelectedQuestions.push(...questionsBySubject[type]);
+        if (questionsBySubject[type]) {
+          allSelectedQuestions.push(...questionsBySubject[type]);
+        }
       });
       
       // Mélanger et sélectionner les questions
@@ -4327,6 +4338,11 @@
         finalQuestions = allSelectedQuestions.slice(0, Math.min(50, allSelectedQuestions.length));
       }
       
+      if (finalQuestions.length === 0) {
+        alert('Aucune question disponible pour cette configuration !');
+        return;
+      }
+      
       // Sauvegarder la configuration dans Firebase
       database.ref('rooms/' + roomId).update({
         questions: finalQuestions,
@@ -4337,7 +4353,10 @@
         seriesScores: {}
       });
       
-      document.getElementById('startQuizBtn').style.display = 'inline-block';
+      const startBtn = document.getElementById('startQuizBtn');
+      if (startBtn) {
+        startBtn.style.display = 'inline-block';
+      }
       
       questionContainer.innerHTML = `
         <div class="question-card">
@@ -5009,25 +5028,33 @@
       });
       
       // Afficher l'onglet sélectionné
-      document.getElementById(tabName + 'Tab').classList.add('active');
-      clickedElement.classList.add('active');
+      const targetTab = document.getElementById(tabName + 'Tab');
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+      
+      if (clickedElement) {
+        clickedElement.classList.add('active');
+      }
     }
 
     // Basculer les détails d'une question
     function toggleQuestionDetails(questionIndex) {
       const details = document.getElementById(`details${questionIndex}`);
-      const summary = details.previousElementSibling;
-      const icon = summary.querySelector('.expand-icon');
+      if (!details) return;
       
-      if (details.style.display === 'none') {
+      const summary = details.previousElementSibling;
+      const icon = summary ? summary.querySelector('.expand-icon') : null;
+      
+      if (details.style.display === 'none' || details.style.display === '') {
         details.style.display = 'block';
-        icon.textContent = '▲';
+        if (icon) icon.textContent = '▲';
         
         // Charger les statistiques de cette question
         loadQuestionStats(questionIndex);
       } else {
         details.style.display = 'none';
-        icon.textContent = '▼';
+        if (icon) icon.textContent = '▼';
       }
     }
 
