@@ -4016,6 +4016,7 @@
     }
   ]
     };
+
     // Variables globales
     let currentMode = '';
     let selectedType = '';
@@ -4036,6 +4037,11 @@
     let playerId = '';
     let gameState = 'waiting'; // waiting, playing, results
     let players = {};
+    
+    // Variables de configuration
+    let configSelectedTypes = [];
+    let configSeriesCount = 3;
+    let configQuizFormat = 'series';
     
     // Éléments DOM
     const mainMenu = document.getElementById('mainMenu');
@@ -4207,11 +4213,7 @@
         </div>
       `;
       
-    // Initialiser les variables globales pour la configuration
-    window.selectedTypes = [];
-    window.seriesCount = 3;
-    window.quizFormat = 'series';
-    window.currentSeries = 0;
+
     }
 
     // Mettre à jour la sélection des types
@@ -4219,12 +4221,14 @@
       const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([value="all"])');
       const allCheckbox = document.querySelector('input[value="all"]');
       
-      window.selectedTypes = Array.from(checkboxes)
+      if (!checkboxes || !allCheckbox) return;
+      
+      configSelectedTypes = Array.from(checkboxes)
         .filter(cb => cb.checked)
         .map(cb => cb.value);
       
       // Décocher "Tous" si on sélectionne individuellement
-      if (window.selectedTypes.length > 0) {
+      if (configSelectedTypes.length > 0) {
         allCheckbox.checked = false;
       }
       
@@ -4236,11 +4240,13 @@
       const allCheckbox = document.querySelector('input[value="all"]');
       const otherCheckboxes = document.querySelectorAll('input[type="checkbox"]:not([value="all"])');
       
+      if (!allCheckbox || !otherCheckboxes) return;
+      
       if (allCheckbox.checked) {
-        window.selectedTypes = Object.keys(questionsBySubject);
+        configSelectedTypes = Object.keys(questionsBySubject);
         otherCheckboxes.forEach(cb => cb.checked = true);
       } else {
-        window.selectedTypes = [];
+        configSelectedTypes = [];
         otherCheckboxes.forEach(cb => cb.checked = false);
       }
       
@@ -4249,18 +4255,23 @@
 
     // Mettre à jour la sélection du format
     function updateFormatSelection() {
-      const format = document.querySelector('input[name="format"]:checked').value;
-      window.quizFormat = format;
+      const formatRadio = document.querySelector('input[name="format"]:checked');
+      if (!formatRadio) return;
+      
+      const format = formatRadio.value;
+      configQuizFormat = format;
       
       const seriesConfig = document.getElementById('seriesConfig');
-      seriesConfig.style.display = format === 'series' ? 'block' : 'none';
+      if (seriesConfig) {
+        seriesConfig.style.display = format === 'series' ? 'block' : 'none';
+      }
       
       updateConfigSummary();
     }
 
     // Sélectionner le nombre de séries
     function selectSeriesCount(count) {
-      window.seriesCount = count;
+      configSeriesCount = count;
       
       // Mettre à jour l'interface
       document.querySelectorAll('.series-btn').forEach(btn => {
@@ -4275,7 +4286,10 @@
         }
       });
       
-      document.getElementById('totalQuestions').textContent = count * 5;
+      const totalQuestionsElem = document.getElementById('totalQuestions');
+      if (totalQuestionsElem) {
+        totalQuestionsElem.textContent = count * 5;
+      }
       updateConfigSummary();
     }
 
@@ -4286,22 +4300,22 @@
       
       if (!summaryContent || !generateBtn) return;
       
-      if (!window.selectedTypes || window.selectedTypes.length === 0) {
+      if (!configSelectedTypes || configSelectedTypes.length === 0) {
         summaryContent.innerHTML = 'Sélectionnez au moins un domaine pour commencer';
         generateBtn.style.display = 'none';
         return;
       }
       
-      const typeNames = window.selectedTypes.join(', ');
-      const totalAvailable = window.selectedTypes.reduce((sum, type) => {
+      const typeNames = configSelectedTypes.join(', ');
+      const totalAvailable = configSelectedTypes.reduce((sum, type) => {
         return sum + (questionsBySubject[type] ? questionsBySubject[type].length : 0);
       }, 0);
       
       let summary = `<strong>Domaines :</strong> ${typeNames}<br>`;
       summary += `<strong>Questions disponibles :</strong> ${totalAvailable}<br>`;
       
-      if (window.quizFormat === 'series') {
-        summary += `<strong>Format :</strong> ${window.seriesCount} séries de 5 questions (${window.seriesCount * 5} total)<br>`;
+      if (configQuizFormat === 'series') {
+        summary += `<strong>Format :</strong> ${configSeriesCount} séries de 5 questions (${configSeriesCount * 5} total)<br>`;
         summary += `<strong>Classements :</strong> Après chaque série + final`;
       } else {
         summary += `<strong>Format :</strong> Marathon (toutes les questions d'affilée)<br>`;
@@ -4314,14 +4328,14 @@
 
     // Générer le quiz avec la configuration
     function generateQuiz() {
-      if (!window.selectedTypes || window.selectedTypes.length === 0) {
+      if (!configSelectedTypes || configSelectedTypes.length === 0) {
         alert('Veuillez sélectionner au moins un domaine !');
         return;
       }
       
       // Collecter toutes les questions des types sélectionnés
       let allSelectedQuestions = [];
-      window.selectedTypes.forEach(type => {
+      configSelectedTypes.forEach(type => {
         if (questionsBySubject[type]) {
           allSelectedQuestions.push(...questionsBySubject[type]);
         }
@@ -4331,8 +4345,8 @@
       allSelectedQuestions = shuffleArray(allSelectedQuestions);
       
       let finalQuestions = [];
-      if (window.quizFormat === 'series') {
-        const questionsNeeded = window.seriesCount * 5;
+      if (configQuizFormat === 'series') {
+        const questionsNeeded = configSeriesCount * 5;
         finalQuestions = allSelectedQuestions.slice(0, questionsNeeded);
       } else {
         finalQuestions = allSelectedQuestions.slice(0, Math.min(50, allSelectedQuestions.length));
@@ -4346,9 +4360,9 @@
       // Sauvegarder la configuration dans Firebase
       database.ref('rooms/' + roomId).update({
         questions: finalQuestions,
-        selectedTypes: window.selectedTypes,
-        quizFormat: window.quizFormat,
-        seriesCount: window.quizFormat === 'series' ? window.seriesCount : 1,
+        selectedTypes: configSelectedTypes,
+        quizFormat: configQuizFormat,
+        seriesCount: configQuizFormat === 'series' ? configSeriesCount : 1,
         currentSeries: 0,
         seriesScores: {}
       });
@@ -4363,10 +4377,10 @@
           <h3>✅ Quiz configuré avec succès !</h3>
           <div class="final-config">
             <div class="config-item">
-              <strong>📚 Domaines :</strong> ${window.selectedTypes.join(', ')}
+              <strong>📚 Domaines :</strong> ${configSelectedTypes.join(', ')}
             </div>
             <div class="config-item">
-              <strong>🎯 Format :</strong> ${window.quizFormat === 'series' ? `${window.seriesCount} séries de 5 questions` : 'Mode marathon'}
+              <strong>🎯 Format :</strong> ${configQuizFormat === 'series' ? `${configSeriesCount} séries de 5 questions` : 'Mode marathon'}
             </div>
             <div class="config-item">
               <strong>❓ Total :</strong> ${finalQuestions.length} questions
@@ -4464,10 +4478,9 @@
       roomRef.child('currentSeries').on('value', (snapshot) => {
         const seriesNumber = snapshot.val();
         if (seriesNumber !== undefined) {
-          window.currentSeries = seriesNumber;
+          // Mettre à jour la série actuelle
         }
       });
-    }
     }
 
     // Mettre à jour la liste des joueurs
@@ -4499,9 +4512,8 @@
         database.ref('rooms/' + roomId).once('value', (snapshot) => {
           const roomData = snapshot.val();
           questions = roomData.questions || [];
-          window.quizFormat = roomData.quizFormat || 'series';
-          window.seriesCount = roomData.seriesCount || 1;
-          window.currentSeries = 0;
+          configQuizFormat = roomData.quizFormat || 'series';
+          configSeriesCount = roomData.seriesCount || 1;
           
           currentQuestionIndex = 0;
           score = 0;
@@ -4513,9 +4525,8 @@
         database.ref('rooms/' + roomId).once('value', (snapshot) => {
           const roomData = snapshot.val();
           questions = roomData.questions || [];
-          window.quizFormat = roomData.quizFormat || 'series';
-          window.seriesCount = roomData.seriesCount || 1;
-          window.currentSeries = 0;
+          configQuizFormat = roomData.quizFormat || 'series';
+          configSeriesCount = roomData.seriesCount || 1;
           
           currentQuestionIndex = 0;
           score = 0;
@@ -4530,9 +4541,9 @@
     // Afficher la question pour l'hôte
     function showHostQuestion() {
       // Vérifier si on doit afficher un classement de série
-      if (window.quizFormat === 'series' && currentQuestionIndex > 0 && currentQuestionIndex % 5 === 0) {
+      if (configQuizFormat === 'series' && currentQuestionIndex > 0 && currentQuestionIndex % 5 === 0) {
         const serieNumber = Math.floor(currentQuestionIndex / 5);
-        if (serieNumber <= window.seriesCount) {
+        if (serieNumber <= configSeriesCount) {
           showSeriesResults(serieNumber);
           return;
         }
@@ -4544,8 +4555,8 @@
       }
       
       const question = questions[currentQuestionIndex];
-      const currentSeriesNum = window.quizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
-      const questionInSeries = window.quizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
+      const currentSeriesNum = configQuizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
+      const questionInSeries = configQuizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
       
       // Écouter les réponses des joueurs
       listenToPlayerAnswers();
@@ -4554,7 +4565,7 @@
         <div class="question-card">
           <div class="question-header">
             <div class="question-type">${question.type}</div>
-            <div>👑 ${window.quizFormat === 'series' ? `Série ${currentSeriesNum} - Question ${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
+            <div>👑 ${configQuizFormat === 'series' ? `Série ${currentSeriesNum} - Question ${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
           </div>
           <div class="question-title">${question.title}</div>
           <div class="choices">
@@ -4590,7 +4601,7 @@
               📊 Afficher les résultats
             </button>
             <button onclick="nextMultiplayerQuestion()" id="nextQuestionBtn" style="font-size: 1.2em; padding: 15px 30px; background: #17a2b8; display: none;">
-              ➡️ ${window.quizFormat === 'series' && questionInSeries === 5 ? 'Voir le classement' : 'Question suivante'}
+              ➡️ ${configQuizFormat === 'series' && questionInSeries === 5 ? 'Voir le classement' : 'Question suivante'}
             </button>
             <button onclick="endMultiplayerQuiz()" style="font-size: 1.2em; padding: 15px 30px; background: #dc3545;">
               🏁 Terminer le quiz
@@ -4779,8 +4790,8 @@
       }
       
       const question = questions[currentQuestionIndex];
-      const currentSeriesNum = window.quizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
-      const questionInSeries = window.quizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
+      const currentSeriesNum = configQuizFormat === 'series' ? Math.floor(currentQuestionIndex / 5) + 1 : 1;
+      const questionInSeries = configQuizFormat === 'series' ? (currentQuestionIndex % 5) + 1 : currentQuestionIndex + 1;
       
       hasAnswered = false;
       selectedChoices = [];
@@ -4790,7 +4801,7 @@
         <div class="question-card">
           <div class="question-header">
             <div class="question-type">${question.type}</div>
-            <div>📱 ${window.quizFormat === 'series' ? `Série ${currentSeriesNum} - Q${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
+            <div>📱 ${configQuizFormat === 'series' ? `Série ${currentSeriesNum} - Q${questionInSeries}/5` : `Question ${currentQuestionIndex + 1}/${questions.length}`}</div>
           </div>
           <div class="question-title">${question.title}</div>
           <div class="choices">
@@ -4802,7 +4813,7 @@
           </div>
           <div id="playerStatus" style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: center;">
             <p>Sélectionnez votre/vos réponse(s) et validez</p>
-            ${window.quizFormat === 'series' ? `<small>Série ${currentSeriesNum} sur ${window.seriesCount} • Score actuel : ${score} pts</small>` : `<small>Score actuel : ${score} pts</small>`}
+            ${configQuizFormat === 'series' ? `<small>Série ${currentSeriesNum} sur ${configSeriesCount} • Score actuel : ${score} pts</small>` : `<small>Score actuel : ${score} pts</small>`}
           </div>
           <div style="text-align: center;">
             <button onclick="submitMultiplayerAnswer()" id="submitBtn" style="font-size: 1.3em; padding: 15px 40px;">
@@ -4955,8 +4966,8 @@
                     <p>Taux moyen de réussite</p>
                   </div>
                   <div class="stat-card">
-                    <h3>${window.quizFormat === 'series' ? window.seriesCount : 1}</h3>
-                    <p>${window.quizFormat === 'series' ? 'Séries jouées' : 'Quiz marathon'}</p>
+                    <h3>${configQuizFormat === 'series' ? configSeriesCount : 1}</h3>
+                    <p>${configQuizFormat === 'series' ? 'Séries jouées' : 'Quiz marathon'}</p>
                   </div>
                 </div>
                 <div id="detailedStats" style="margin: 30px 0;">
@@ -5177,37 +5188,37 @@
 
     // Exporter les résultats
     function exportResults() {
-      const playersList = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
-      
-      let exportText = `🏆 RÉSULTATS DU QUIZ DWWM\n`;
-      exportText += `================================\n\n`;
-      exportText += `📊 INFORMATIONS GÉNÉRALES\n`;
-      exportText += `- Questions posées : ${questions.length}\n`;
-      exportText += `- Participants : ${playersList.length}\n`;
-      exportText += `- Format : ${window.quizFormat === 'series' ? `${window.seriesCount} séries de 5 questions` : 'Mode marathon'}\n`;
-      exportText += `- Domaines : ${window.selectedTypes && window.selectedTypes.length > 0 ? window.selectedTypes.join(', ') : 'Mixte'}\n`;
-      exportText += `- Date : ${new Date().toLocaleDateString('fr-FR')}\n\n`;
-      
-      exportText += `🏆 CLASSEMENT FINAL\n`;
-      exportText += `==================\n`;
-      playersList.forEach((player, index) => {
-        const percentage = Math.round(((player.score || 0) / questions.length) * 100);
-        exportText += `${index + 1}. ${player.isHost ? '👑 ' : ''}${player.name} - ${player.score || 0}/${questions.length} (${percentage}%)\n`;
-      });
-      
-      exportText += `\n📚 RÉCAPITULATIF DES QUESTIONS\n`;
-      exportText += `==============================\n`;
-      questions.forEach((question, index) => {
-        exportText += `\nQ${index + 1} [${question.type}] ${question.title}\n`;
-        question.choices.forEach((choice, i) => {
-          exportText += `${question.answer.includes(i) ? '✅' : '  '} ${choice}\n`;
-        });
-        // Retirer les balises HTML de l'explication
-        const cleanExplanation = question.explanation.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ');
-        exportText += `💡 ${cleanExplanation}\n`;
-      });
-      
       try {
+        const playersList = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
+        
+        let exportText = `🏆 RÉSULTATS DU QUIZ DWWM\n`;
+        exportText += `================================\n\n`;
+        exportText += `📊 INFORMATIONS GÉNÉRALES\n`;
+        exportText += `- Questions posées : ${questions.length}\n`;
+        exportText += `- Participants : ${playersList.length}\n`;
+        exportText += `- Format : ${configQuizFormat === 'series' ? `${configSeriesCount} séries de 5 questions` : 'Mode marathon'}\n`;
+        exportText += `- Domaines : ${configSelectedTypes && configSelectedTypes.length > 0 ? configSelectedTypes.join(', ') : 'Mixte'}\n`;
+        exportText += `- Date : ${new Date().toLocaleDateString('fr-FR')}\n\n`;
+        
+        exportText += `🏆 CLASSEMENT FINAL\n`;
+        exportText += `==================\n`;
+        playersList.forEach((player, index) => {
+          const percentage = Math.round(((player.score || 0) / questions.length) * 100);
+          exportText += `${index + 1}. ${player.isHost ? '👑 ' : ''}${player.name} - ${player.score || 0}/${questions.length} (${percentage}%)\n`;
+        });
+        
+        exportText += `\n📚 RÉCAPITULATIF DES QUESTIONS\n`;
+        exportText += `==============================\n`;
+        questions.forEach((question, index) => {
+          exportText += `\nQ${index + 1} [${question.type}] ${question.title}\n`;
+          question.choices.forEach((choice, i) => {
+            exportText += `${question.answer.includes(i) ? '✅' : '  '} ${choice}\n`;
+          });
+          // Retirer les balises HTML de l'explication
+          const cleanExplanation = question.explanation.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ');
+          exportText += `💡 ${cleanExplanation}\n`;
+        });
+        
         // Créer et télécharger le fichier
         const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
         const url = window.URL.createObjectURL(blob);
@@ -5221,15 +5232,8 @@
         
         alert('📄 Résultats exportés avec succès !');
       } catch (error) {
-        // Fallback : copier dans le presse-papier
-        navigator.clipboard.writeText(exportText).then(() => {
-          alert('📄 Résultats copiés dans le presse-papier !');
-        }).catch(() => {
-          // Afficher dans une nouvelle fenêtre si tout échoue
-          const newWindow = window.open('', '_blank');
-          newWindow.document.write(`<pre>${exportText}</pre>`);
-          alert('📄 Résultats ouverts dans une nouvelle fenêtre. Copiez le contenu manuellement.');
-        });
+        console.error('Erreur lors de l\'export:', error);
+        alert('❌ Erreur lors de l\'export. Vérifiez la console pour plus de détails.');
       }
     }
 
@@ -5476,18 +5480,18 @@
     // Mise à jour du score
     function updateScore() {
       if (isHost) {
-        if (window.quizFormat === 'series') {
+        if (configQuizFormat === 'series') {
           const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
-          const totalSeries = window.seriesCount;
+          const totalSeries = configSeriesCount;
           scoreText.textContent = `👑 Hôte - Série ${currentSeriesNum}/${totalSeries}`;
         } else {
           scoreText.textContent = `👑 Hôte - Question ${currentQuestionIndex + 1}/${questions.length}`;
         }
       } else {
-        if (window.quizFormat === 'series') {
+        if (configQuizFormat === 'series') {
           const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
           const questionInSeries = (currentQuestionIndex % 5) + 1;
-          const totalSeries = window.seriesCount;
+          const totalSeries = configSeriesCount;
           scoreText.textContent = `Score: ${score} pts | Série ${currentSeriesNum}/${totalSeries} (Q${questionInSeries}/5)`;
         } else {
           scoreText.textContent = `Score: ${score}/${Math.max(currentQuestionIndex, 1)} (${Math.round((score/Math.max(currentQuestionIndex, 1))*100)}%)`;
@@ -5497,7 +5501,7 @@
 
     // Mise à jour de la progression
     function updateProgress() {
-      if (window.quizFormat === 'series') {
+      if (configQuizFormat === 'series') {
         const currentSeriesNum = Math.floor(currentQuestionIndex / 5) + 1;
         const questionInSeries = (currentQuestionIndex % 5) + 1;
         const progress = (questionInSeries / 5) * 100;
