@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz DWWM Interactif Multijoueur</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quiz DWWM Interactif Multijoueur</title>
+<style>
     :root { 
       --color-bg-start: #667eea; 
       --color-bg-end: #764ba2; 
@@ -777,99 +778,141 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
-  </style>
+  
+#mobilePlayerUI {
+  padding: 1rem;
+  max-width: 480px;
+  margin: auto;
+  background: #f9f9f9;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+}
+.mobile-box {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+.mobile-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.mobile-choice {
+  padding: 1rem;
+  background: #e0e0e0;
+  border-radius: 0.75rem;
+  text-align: center;
+  font-size: 1rem;
+  user-select: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mobile-choice.selected {
+  background: #74b9ff;
+  color: white;
+}
+.mobile-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background: #0984e3;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+.mobile-feedback {
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎯 Quiz DWWM Pro</h1>
-    
-    <!-- Menu principal -->
-    <div id="mainMenu">
-      <div class="mode-selector">
-        <div class="mode-card" onclick="selectMode('selftest')">
-          <h3>⚡ Test Rapide</h3>
-          <p>10 questions aléatoires pour un entraînement express</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('onepertype')">
-          <h3>🎯 Tour d'horizon</h3>
-          <p>Une question de chaque type pour tester tous vos domaines</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('typetest')">
-          <h3>📚 Test ciblé</h3>
-          <p>8 questions sur un domaine spécifique</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('fulltypetest')">
-          <h3>🎓 Maîtrise complète</h3>
-          <p>Toutes les questions d'un domaine</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('review')">
-          <h3>🔄 Révision ciblée</h3>
-          <p>Revoir les questions où vous avez fait des erreurs</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('fulltest')">
-          <h3>🏆 Super Test</h3>
-          <p>Toutes les questions de la base de données</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('host')">
-          <h3>🖥️ Mode Hôte</h3>
-          <p>Créer une partie multijoueur</p>
-        </div>
-        
-        <div class="mode-card" onclick="selectMode('join')">
-          <h3>📱 Rejoindre</h3>
-          <p>Participer à une partie multijoueur</p>
-        </div>
-        
-        <div class="mode-card" onclick="showQuestionsManager()">
-          <h3>⚙️ Gestion</h3>
-          <p>Recharger ou gérer les questions</p>
-        </div>
-      </div>
-      
-      <div class="type-selector" id="typeSelector">
-        <h3>Choisissez un domaine :</h3>
-        <div id="typeButtons"></div>
-        <button onclick="startSelectedMode()" id="startBtn" style="display:none;">Démarrer le quiz</button>
-      </div>
-    </div>
-    
-    <!-- Zone de jeu -->
-    <div class="game-area" id="gameArea">
-      <div class="score-display" id="scoreDisplay">
-        <div id="scoreText"></div>
-        <div id="timerDisplay" class="timer"></div>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div id="questionContainer"></div>
-    </div>
-    
-    <!-- Section multijoueur -->
-    <div class="connection-info" id="connectionInfo" style="display:none;">
-      <div id="roomCode"></div>
-      <div class="qr-code" id="qrCode" style="display:none;"></div>
-      <div id="playersList"></div>
-    </div>
-  </div>
+<div class="container">
+<h1>🎯 Quiz DWWM Pro</h1>
+<!-- Menu principal -->
+<div id="mainMenu">
+<div class="mode-selector">
+<div class="mode-card" onclick="selectMode('selftest')">
+<h3>⚡ Test Rapide</h3>
+<p>10 questions aléatoires pour un entraînement express</p>
+</div>
+<div class="mode-card" onclick="selectMode('onepertype')">
+<h3>🎯 Tour d'horizon</h3>
+<p>Une question de chaque type pour tester tous vos domaines</p>
+</div>
+<div class="mode-card" onclick="selectMode('typetest')">
+<h3>📚 Test ciblé</h3>
+<p>8 questions sur un domaine spécifique</p>
+</div>
+<div class="mode-card" onclick="selectMode('fulltypetest')">
+<h3>🎓 Maîtrise complète</h3>
+<p>Toutes les questions d'un domaine</p>
+</div>
+<div class="mode-card" onclick="selectMode('review')">
+<h3>🔄 Révision ciblée</h3>
+<p>Revoir les questions où vous avez fait des erreurs</p>
+</div>
+<div class="mode-card" onclick="selectMode('fulltest')">
+<h3>🏆 Super Test</h3>
+<p>Toutes les questions de la base de données</p>
+</div>
+<div class="mode-card" onclick="selectMode('host')">
+<h3>🖥️ Mode Hôte</h3>
+<p>Créer une partie multijoueur</p>
+</div>
+<div class="mode-card" onclick="selectMode('join')">
+<h3>📱 Rejoindre</h3>
+<p>Participer à une partie multijoueur</p>
+</div>
+<div class="mode-card" onclick="showQuestionsManager()">
+<h3>⚙️ Gestion</h3>
+<p>Recharger ou gérer les questions</p>
+</div>
+</div>
+<div class="type-selector" id="typeSelector">
+<h3>Choisissez un domaine :</h3>
+<div id="typeButtons"></div>
+<button id="startBtn" onclick="startSelectedMode()" style="display:none;">Démarrer le quiz</button>
+</div>
+</div>
+<!-- Zone de jeu -->
+<div class="game-area" id="gameArea">
+<div class="score-display" id="scoreDisplay">
+<div id="scoreText"></div>
+<div class="timer" id="timerDisplay"></div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<div id="questionContainer"></div>
+</div>
+<div id="mobilePlayerUI" style="display: none;">
+<div class="mobile-box" id="mobileQuestion"></div>
+<div class="mobile-choices" id="mobileChoices"></div>
+<button class="mobile-button" id="mobileSubmit">Valider</button>
+<div class="mobile-feedback" id="mobileFeedback"></div>
+</div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  
-  <!-- QR Code Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
-  
-  <!-- Questions DWWM -->
-  <script src="./questions.js"></script>
+<!-- Section multijoueur -->
+<div class="connection-info" id="connectionInfo" style="display:none;">
+<div id="roomCode"></div>
+<div class="qr-code" id="qrCode" style="display:none;"></div>
+<div id="playersList"></div>
+</div>
+</div>
+<!-- Firebase SDK -->
 
-  <script>
+
+<!-- QR Code Library -->
+
+<!-- Questions DWWM -->
+
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script><script src="./questions.js"></script><script>
     // ⚠️ CONFIGURATION FIREBASE - VOS VRAIES VALEURS
     const firebaseConfig = {
       apiKey: "AIzaSyCOegG19Z-G04jRXBA3aXUSLTrHrPtEwbQ",
@@ -3157,6 +3200,63 @@
         setTimeout(() => selectMode('join'), 500);
       }
     });
-  </script>
-</body>
+  </script><script>
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+function showMobileQuestion(question) {
+  const box = document.getElementById('mobileQuestion');
+  const choicesBox = document.getElementById('mobileChoices');
+  const feedback = document.getElementById('mobileFeedback');
+  const submit = document.getElementById('mobileSubmit');
+
+  box.textContent = question.title;
+  choicesBox.innerHTML = '';
+  feedback.textContent = '';
+
+  const selected = new Set();
+
+  question.choices.forEach((choice, i) => {
+    const div = document.createElement('div');
+    div.className = 'mobile-choice';
+    div.textContent = choice;
+    div.onclick = () => {
+      if (question.answer.length === 1) {
+        selected.clear();
+        document.querySelectorAll('.mobile-choice').forEach(el => el.classList.remove('selected'));
+      }
+      if (selected.has(i)) {
+        selected.delete(i);
+        div.classList.remove('selected');
+      } else {
+        selected.add(i);
+        div.classList.add('selected');
+      }
+    };
+    choicesBox.appendChild(div);
+  });
+
+  submit.onclick = () => {
+    if (selected.size === 0) {
+      feedback.textContent = 'Sélectionnez au moins une réponse.';
+      return;
+    }
+    submitAnswersToQuestion(Array.from(selected));
+    document.getElementById('mobilePlayerUI').style.display = 'none';
+  };
+}
+
+// Intégration dans showQuestion existant
+const originalShowQuestion = window.showQuestion;
+window.showQuestion = function(questionData) {
+  if (isMobileDevice() && !isHost) {
+    showMobileQuestion(questionData);
+  } else {
+    if (typeof originalShowQuestion === 'function') {
+      originalShowQuestion(questionData);
+    }
+  }
+};
+</script></body>
 </html>
